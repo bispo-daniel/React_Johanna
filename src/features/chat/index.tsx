@@ -7,45 +7,45 @@ type Message = {
   content: string;
 };
 
-const messages_template: Message[] = [
-  {
-    type: "botMessage",
-    content: "Hello, how can I help?",
-  },
-  {
-    type: "userMessage",
-    content: "Hi! I want you to help me with my college essay!",
-  },
-  {
-    type: "botMessage",
-    content: "Sure thing! Would be my pleasure!",
-  },
-  {
-    type: "userMessage",
-    content:
-      "Great! So, my essay is about the impact of technology on modern society.",
-  },
-  {
-    type: "botMessage",
-    content:
-      "That's a fascinating topic! Technology has certainly changed the way we live and interact with each other. What specific aspects of technology are you focusing on in your essay?",
-  },
-  {
-    type: "userMessage",
-    content:
-      "I'm looking at how technology has changed communication, education, and work.",
-  },
-  {
-    type: "botMessage",
-    content:
-      "Those are important areas! Technology has made communication faster and more accessible, revolutionized education with online learning, and transformed the way we work with remote and digital tools. How are you planning to structure your essay?",
-  },
-  {
-    type: "userMessage",
-    content:
-      "I'm thinking of starting with an introduction about the rapid advancement of technology, then discussing each impact in a separate section, and finally, concluding with some thoughts on the future of technology.",
-  },
-];
+// const messages_template: Message[] = [
+//   {
+//     type: "botMessage",
+//     content: "Hello, how can I help?",
+//   },
+//   {
+//     type: "userMessage",
+//     content: "Hi! I want you to help me with my college essay!",
+//   },
+//   {
+//     type: "botMessage",
+//     content: "Sure thing! Would be my pleasure!",
+//   },
+//   {
+//     type: "userMessage",
+//     content:
+//       "Great! So, my essay is about the impact of technology on modern society.",
+//   },
+//   {
+//     type: "botMessage",
+//     content:
+//       "That's a fascinating topic! Technology has certainly changed the way we live and interact with each other. What specific aspects of technology are you focusing on in your essay?",
+//   },
+//   {
+//     type: "userMessage",
+//     content:
+//       "I'm looking at how technology has changed communication, education, and work.",
+//   },
+//   {
+//     type: "botMessage",
+//     content:
+//       "Those are important areas! Technology has made communication faster and more accessible, revolutionized education with online learning, and transformed the way we work with remote and digital tools. How are you planning to structure your essay?",
+//   },
+//   {
+//     type: "userMessage",
+//     content:
+//       "I'm thinking of starting with an introduction about the rapid advancement of technology, then discussing each impact in a separate section, and finally, concluding with some thoughts on the future of technology.",
+//   },
+// ];
 
 function Chat() {
   // const [messages, setMessage] = useState<Message[]>(messages_template);
