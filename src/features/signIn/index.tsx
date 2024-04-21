@@ -13,15 +13,6 @@ function SignIn() {
   const [formattedPhone, setFormattedPhone] = useState("");
   const [formattedDateOfBirth, setFormattedDateOfBirth] = useState("");
 
-  function useVars() {
-    console.log(formattedDateOfBirth);
-    console.log(password);
-    setPassword("");
-    setFormattedDateOfBirth("");
-  }
-
-  useVars();
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
