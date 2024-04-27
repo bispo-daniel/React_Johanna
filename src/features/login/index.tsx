@@ -1,39 +1,54 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { EyeOff2Outline, EyeOutline } from "@styled-icons/evaicons-outline";
 import { Link } from "react-router-dom";
+import { AuthType } from "./types";
+import { useAuthentication } from "./api/auth";
 
 function Login() {
+  const [userAuth, setUserAuth] = useState<AuthType>({
+    email: "",
+    password: "",
+  });
+
+  const [shouldSendReq, setShouldSendReq] = useState(false);
+  const { isError, isSuccess, isLoading } = useAuthentication(
+    shouldSendReq,
+    userAuth
+  );
+
   const [showPassword, setShowPassword] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
 
-  // implement react-query
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [isError, setIsError] = useState(false);
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("handlesubmit has been called");
 
-    setIsSuccess(false);
-    setIsError(false);
-    setIsLoading(true);
-
-    setTimeout(() => {
-      setIsLoading(false);
-      setIsSuccess(true);
-    }, 10000);
+    setShouldSendReq(true);
   };
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setUserAuth((prevUserAuth) => ({
+      ...prevUserAuth,
+      [name]: value,
+    }));
+  };
+
+  useEffect(() => {
+    setShouldSendReq(false);
+  }, [isError]);
 
   return (
     <div className="min-h-screen flex items-center justify-center select-none">
       <div className="p-8 rounded shadow-xl max-w-sm w-full bg-[#280c2a]">
         <form onSubmit={(e) => handleSubmit(e)}>
           <input
+            name="email"
             type="email"
             className="block w-full border-b focus:border-[#f5ac19] transition-colors ease-linear duration-300 border-white bg-transparent mt-1 px-2 outline-none mb-2"
             placeholder="Email"
             required
+            onChange={handleInputChange}
           />
           <div
             className={
@@ -42,12 +57,14 @@ function Login() {
             }
           >
             <input
+              name="password"
               type={showPassword ? "text" : "password"}
               className="block w-full border-none bg-transparent mt-1 px-2 outline-none"
               placeholder="Senha"
               required
               onFocus={() => setIsFocused(true)}
               onBlur={() => setIsFocused(false)}
+              onChange={handleInputChange}
             />
             {showPassword ? (
               <EyeOff2Outline

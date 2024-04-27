@@ -1,22 +1,15 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { QueryClientProvider, QueryClient } from "react-query";
 
-import { Layout } from "./components";
-import { Home, Info, Login, SignIN, Chat } from "./features";
 import "./App.css";
+import { Router } from "./router";
+
+const queryClient = new QueryClient();
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route element={<Layout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/info" element={<Info />} />
-          <Route path="/chat" element={<Chat />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signin" element={<SignIN />} />
-        </Route>
-      </Routes>
-    </Router>
+    <QueryClientProvider client={queryClient}>
+      <Router />
+    </QueryClientProvider>
   );
 }
 
