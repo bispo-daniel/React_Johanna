@@ -1,56 +1,113 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { EyeOff2Outline, EyeOutline } from "@styled-icons/evaicons-outline";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import InputMask from "react-input-mask";
+import { useCreateUserQuery, CreateUserType } from "./api/postUser";
 
 function SignIn() {
-  const [isFocused, setIsFocused] = useState(false);
+  const [shouldCallHook, setShouldCallHook] = useState(false);
+  const [user, setUser] = useState<CreateUserType>({
+    email: "",
+    password: "",
+    nome: "",
+    telefone: "",
+    dataDeNascimento: "",
+  });
+
+  const { isLoading, isSuccess, isError } = useCreateUserQuery(
+    shouldCallHook,
+    user
+  );
+
+  const [isPassInputFocused1, setIsPassInputFocused1] = useState(false);
+  const [isPassInputFocused2, setIsPassInputFocused2] = useState(false);
+
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [isError, setIsError] = useState(false);
-  const [password, setPassword] = useState("");
-  const [formattedPhone, setFormattedPhone] = useState("");
-  const [formattedDateOfBirth, setFormattedDateOfBirth] = useState("");
+
+  const [verificationPassword, setVerificationPassword] = useState("");
+  const [isPasswordVerified, setIsPasswordVerified] = useState(false);
+
+  useEffect(() => {
+    setIsPasswordVerified(verificationPassword === user.password);
+  }, [verificationPassword, user.password]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    setIsSuccess(false);
-    setIsError(false);
-    setIsLoading(true);
+    if (!isPasswordVerified) return;
 
-    setTimeout(() => {
-      setIsLoading(false);
-      setIsSuccess(true);
-    }, 2000);
+    handleDateChange();
+
+    setShouldCallHook(true);
   };
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    setUser((prevUser) => ({
+      ...prevUser,
+      [name]: value,
+    }));
+  };
+
+  const [day, setDay] = useState("");
+  const [month, setMonth] = useState("");
+  const [year, setYear] = useState("");
+
+  const handleDateChange = () => {
+    const formattedDate = `${day.padStart(2, "0")}/${month.padStart(
+      2,
+      "0"
+    )}/${year}`;
+    setUser((prevUser) => ({
+      ...prevUser,
+      dataDeNascimento: formattedDate,
+    }));
+  };
+
+  useEffect(() => {
+    if (!isLoading) {
+      setShouldCallHook(false);
+    }
+  }, [isLoading]);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setTimeout(() => {
+      navigate("/login");
+    }, 1000);
+  }, [isSuccess]);
 
   return (
     <div className="min-h-screen flex items-center justify-center select-none">
       <div className="p-8 rounded shadow-xl max-w-[450px] w-full bg-[#280c2a]">
         <form onSubmit={handleSubmit}>
           <input
+            name="nome"
             type="text"
             className="block w-full border-b focus:border-[#f5ac19] transition-colors ease-linear duration-300 border-white bg-transparent mt-1 px-2 outline-none mb-2"
             placeholder="Nome"
             required
+            onChange={handleChange}
           />
           <input
+            name="email"
             type="email"
             className="block w-full border-b focus:border-[#f5ac19] transition-colors ease-linear duration-300 border-white bg-transparent mt-1 px-2 outline-none mb-2"
             placeholder="Email"
             required
+            onChange={handleChange}
           />
           <InputMask
+            name="telefone"
+            type="text"
             mask="(99) 99999-9999"
             maskChar=""
-            value={formattedPhone}
-            onChange={(e) => setFormattedPhone(e.target.value)}
             className="block w-full border-b focus:border-[#f5ac19] transition-colors ease-linear duration-300 border-white bg-transparent mt-1 px-2 outline-none mb-2"
             placeholder="Celular"
             required
-            type="text"
+            onChange={handleChange}
           />
 
           <div className="flex">
@@ -58,8 +115,11 @@ function SignIn() {
             <select
               className="rounded  w-1/3 border-b focus:border-[#f5ac19] transition-colors ease-linear duration-300 border-white bg-transparent mt-1 px-2 outline-none mb-2 mr-2"
               required
+              onChange={(e) => setDay(e.target.value)}
             >
-              <option value="">Dia</option>
+              <option value="" className="hidden">
+                Dia
+              </option>
               {[...Array(31).keys()].map((day) => (
                 <option className="text-black" key={day + 1} value={day + 1}>
                   {day + 1}
@@ -71,8 +131,11 @@ function SignIn() {
             <select
               className="rounded  w-1/3 border-b focus:border-[#f5ac19] transition-colors ease-linear duration-300 border-white bg-transparent mt-1 px-2 outline-none mb-2 mr-2"
               required
+              onChange={(e) => setMonth(e.target.value)}
             >
-              <option value="">Mês</option>
+              <option value="" className="hidden">
+                Mês
+              </option>
               {[
                 "Janeiro",
                 "Fevereiro",
@@ -101,8 +164,11 @@ function SignIn() {
             <select
               className="rounded  w-1/3 border-b focus:border-[#f5ac19] transition-colors ease-linear duration-300 border-white bg-transparent mt-1 px-2 outline-none mb-2"
               required
+              onChange={(e) => setYear(e.target.value)}
             >
-              <option value="">Ano</option>
+              <option value="" className="hidden">
+                Ano
+              </option>
               {[...Array(71).keys()].map((year) => (
                 <option
                   className="text-black"
@@ -114,19 +180,22 @@ function SignIn() {
               ))}
             </select>
           </div>
+
           <div
             className={
-              "border-b w-full mb-8 flex items-center transition-colors ease-linear duration-300 " +
-              `${isFocused ? "border-[#f5ac19] " : "border-white"}`
+              "border-b w-full mb-2 flex items-center transition-colors ease-linear duration-300 " +
+              `${isPassInputFocused1 ? "border-[#f5ac19] " : "border-white"}`
             }
           >
             <input
+              name="password"
               type={showPassword ? "text" : "password"}
               className="block w-full border-none bg-transparent mt-1 px-2 outline-none"
               placeholder="Senha"
               required
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
+              onFocus={() => setIsPassInputFocused1(true)}
+              onBlur={() => setIsPassInputFocused1(false)}
+              onChange={handleChange}
             />
             {showPassword ? (
               <EyeOff2Outline
@@ -137,13 +206,54 @@ function SignIn() {
               <EyeOutline onClick={() => setShowPassword(true)} size="20" />
             )}
           </div>
+
+          <div
+            className={
+              "border-b w-full flex items-center transition-colors ease-linear duration-300 " +
+              `${isPassInputFocused2 ? "border-[#f5ac19] " : "border-white"}`
+            }
+          >
+            <input
+              type={showPassword ? "text" : "password"}
+              className="block w-full border-none bg-transparent mt-1 px-2 outline-none"
+              placeholder="Repita a Senha"
+              required
+              onFocus={() => setIsPassInputFocused2(true)}
+              onBlur={() => setIsPassInputFocused2(false)}
+              onChange={(e) => setVerificationPassword(e.target.value)}
+            />
+            {showPassword ? (
+              <EyeOff2Outline
+                onClick={() => setShowPassword(false)}
+                size="20"
+              />
+            ) : (
+              <EyeOutline onClick={() => setShowPassword(true)} size="20" />
+            )}
+          </div>
+
+          {verificationPassword && (
+            <div className="w-full flex justify-end mt-1">
+              <span
+                className={`text-[12px] ${
+                  isPasswordVerified ? "text-green-500" : "text-red-500"
+                }`}
+              >
+                {isPasswordVerified
+                  ? "Senha são iguais!"
+                  : "Senhas são diferentes..."}
+              </span>
+            </div>
+          )}
+
           <button
             type="submit"
-            className="block w-full bg-white text-[#f5ac19] font-semibold py-2 rounded-md transition duration-300 ease-in-out hover:bg-[#f5ac19] hover:text-white"
+            className="block mt-6 w-full bg-white text-[#f5ac19] font-semibold py-2 rounded-md transition duration-300 ease-in-out hover:bg-[#f5ac19] hover:text-white"
           >
-            {isLoading ? "Loading..." : "Sign In"}
+            {isLoading ? "Carregando..." : "Cadastrar"}
           </button>
         </form>
+
         <div className="mt-4">
           <p>
             Já possui uma conta?{" "}
@@ -152,11 +262,13 @@ function SignIn() {
             </Link>
           </p>
         </div>
+
         {isLoading && (
           <div className="mt-4">
             <div className="progress-bar"></div>
           </div>
         )}
+
         {(isSuccess || isError) && (
           <div className="mt-4">
             <div
