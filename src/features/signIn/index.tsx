@@ -22,7 +22,8 @@ function SignIn() {
   const [isPassInputFocused1, setIsPassInputFocused1] = useState(false);
   const [isPassInputFocused2, setIsPassInputFocused2] = useState(false);
 
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword1, setShowPassword1] = useState(false);
+  const [showPassword2, setShowPassword2] = useState(false);
 
   const [verificationPassword, setVerificationPassword] = useState("");
   const [isPasswordVerified, setIsPasswordVerified] = useState(false);
@@ -190,7 +191,7 @@ function SignIn() {
           >
             <input
               name="password"
-              type={showPassword ? "text" : "password"}
+              type={showPassword1 ? "text" : "password"}
               className="block w-full border-none bg-transparent mt-1 px-2 outline-none"
               placeholder="Senha"
               required
@@ -198,13 +199,13 @@ function SignIn() {
               onBlur={() => setIsPassInputFocused1(false)}
               onChange={handleChange}
             />
-            {showPassword ? (
+            {showPassword1 ? (
               <EyeOff2Outline
-                onClick={() => setShowPassword(false)}
+                onClick={() => setShowPassword1(false)}
                 size="20"
               />
             ) : (
-              <EyeOutline onClick={() => setShowPassword(true)} size="20" />
+              <EyeOutline onClick={() => setShowPassword1(true)} size="20" />
             )}
           </div>
 
@@ -215,7 +216,7 @@ function SignIn() {
             }
           >
             <input
-              type={showPassword ? "text" : "password"}
+              type={showPassword2 ? "text" : "password"}
               className="block w-full border-none bg-transparent mt-1 px-2 outline-none"
               placeholder="Repita a Senha"
               required
@@ -223,13 +224,13 @@ function SignIn() {
               onBlur={() => setIsPassInputFocused2(false)}
               onChange={(e) => setVerificationPassword(e.target.value)}
             />
-            {showPassword ? (
+            {showPassword2 ? (
               <EyeOff2Outline
-                onClick={() => setShowPassword(false)}
+                onClick={() => setShowPassword2(false)}
                 size="20"
               />
             ) : (
-              <EyeOutline onClick={() => setShowPassword(true)} size="20" />
+              <EyeOutline onClick={() => setShowPassword2(true)} size="20" />
             )}
           </div>
 
