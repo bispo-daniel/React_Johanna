@@ -1,8 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { EyeOff2Outline, EyeOutline } from "@styled-icons/evaicons-outline";
 import { Link } from "react-router-dom";
-import { AuthType } from "./types";
-import { useAuthentication } from "./api/auth";
+import { useAuthentication, AuthType } from "./api/auth";
 
 function Login() {
   const [userAuth, setUserAuth] = useState<AuthType>({
@@ -79,7 +78,7 @@ function Login() {
             type="submit"
             className="block w-full bg-white text-[#f5ac19] font-semibold py-2 rounded-md transition duration-300 ease-in-out hover:bg-[#f5ac19] hover:text-white"
           >
-            {isLoading ? "Loading..." : "Login"}
+            {isLoading ? "Carregando..." : "Entrar"}
           </button>
         </form>
         <div className="mt-4">

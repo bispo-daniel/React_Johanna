@@ -1,7 +1,11 @@
 import { API_URL, QUERY_KEYS } from "@/config";
 import { responseOk } from "@/auth-provider";
 import { useQuery } from "react-query";
-import { AuthType } from "../types";
+
+export type AuthType = {
+  email: string,
+  password: string
+}
 
 const authenticate = async (userAuth: AuthType) => {
   const auth = JSON.stringify(userAuth);
@@ -21,7 +25,8 @@ const authenticate = async (userAuth: AuthType) => {
 
 export const useAuthentication = (enabled: boolean, auth: AuthType) =>
   useQuery({
-    queryKey: [QUERY_KEYS.auth], queryFn: () => authenticate(auth,),
+    queryKey: [QUERY_KEYS.auth],
+    queryFn: () => authenticate(auth),
     enabled,
     retry: false,
     refetchOnMount: false,
