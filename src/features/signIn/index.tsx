@@ -74,9 +74,10 @@ function SignIn() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setTimeout(() => {
-      navigate("/login");
-    }, 1000);
+    if (isSuccess)
+      setTimeout(() => {
+        navigate("/login");
+      }, 1000);
   }, [isSuccess]);
 
   return (
