@@ -133,7 +133,7 @@ const Message = ({ msg }: { msg: Message }) => {
         <img
           src={pfp}
           alt=""
-          className="w-[20px] rounded-full mr-2 select-none"
+          className="w-[24px] rounded-full mr-2 select-none"
           draggable="false"
         />
         <p className="select-none font-semibold">
