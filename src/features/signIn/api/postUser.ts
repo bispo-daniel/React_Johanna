@@ -6,15 +6,15 @@ import { API_URL } from '@/config';
 export type CreateUserType = {
   email: string,
   password: string,
-  nome: string,
-  telefone: string,
+  username: string,
+  telephone: string,
   dataDeNascimento: string
 }
 
 const createUser = async (userData: CreateUserType) => {
   const user = JSON.stringify(userData);
 
-  const response = await fetch(`${API_URL}/`,
+  const response = await fetch(`${API_URL}/users`,
     {
       method: "POST",
       headers: {

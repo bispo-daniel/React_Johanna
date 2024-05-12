@@ -9,8 +9,8 @@ function SignIn() {
   const [user, setUser] = useState<CreateUserType>({
     email: "",
     password: "",
-    nome: "",
-    telefone: "",
+    username: "",
+    telephone: "",
     dataDeNascimento: "",
   });
 
