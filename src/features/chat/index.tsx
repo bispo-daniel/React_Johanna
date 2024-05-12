@@ -20,7 +20,6 @@ function Chat() {
   const [socket, setSocket] = useState<Socket | null>(null);
 
   useEffect(() => {
-    console.log(SOCKET_URL);
     const socket = io(SOCKET_URL);
     setSocket(socket);
 
