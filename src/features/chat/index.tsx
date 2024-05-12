@@ -1,69 +1,58 @@
 import { useEffect, useRef, useState } from "react";
 import { Send } from "@styled-icons/boxicons-solid";
+import { io, Socket } from "socket.io-client";
+
 import { JohannaImg, defaultPfp, JohannaNoBackgroundImg } from "@/assets";
+import { SOCKET_URL } from "@/config";
 
 type Message = {
   type: "userMessage" | "botMessage";
   content: string;
 };
 
-// const messages_template: Message[] = [
-//   {
-//     type: "botMessage",
-//     content: "Hello, how can I help?",
-//   },
-//   {
-//     type: "userMessage",
-//     content: "Hi! I want you to help me with my college essay!",
-//   },
-//   {
-//     type: "botMessage",
-//     content: "Sure thing! Would be my pleasure!",
-//   },
-//   {
-//     type: "userMessage",
-//     content:
-//       "Great! So, my essay is about the impact of technology on modern society.",
-//   },
-//   {
-//     type: "botMessage",
-//     content:
-//       "That's a fascinating topic! Technology has certainly changed the way we live and interact with each other. What specific aspects of technology are you focusing on in your essay?",
-//   },
-//   {
-//     type: "userMessage",
-//     content:
-//       "I'm looking at how technology has changed communication, education, and work.",
-//   },
-//   {
-//     type: "botMessage",
-//     content:
-//       "Those are important areas! Technology has made communication faster and more accessible, revolutionized education with online learning, and transformed the way we work with remote and digital tools. How are you planning to structure your essay?",
-//   },
-//   {
-//     type: "userMessage",
-//     content:
-//       "I'm thinking of starting with an introduction about the rapid advancement of technology, then discussing each impact in a separate section, and finally, concluding with some thoughts on the future of technology.",
-//   },
-// ];
-
 function Chat() {
-  // const [messages, setMessage] = useState<Message[]>(messages_template);
   const [messages, setMessage] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [isHovering, setIsHovering] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isFocused, setIsFocused] = useState(false);
 
+  const [socket, setSocket] = useState<Socket | null>(null);
+
+  useEffect(() => {
+    const socket = io(SOCKET_URL);
+    setSocket(socket);
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!socket) return;
+
+    socket.on("bot-message", (message: string) => {
+      setMessage((messages) => [
+        ...messages,
+        { type: "botMessage", content: message },
+      ]);
+    });
+
+    return () => {
+      socket.off("bot-message");
+    };
+  }, [socket]);
+
   const sendMessage = () => {
-    if (newMessage.trim() === "") {
-      return;
-    }
+    if (newMessage.trim() === "" || !socket) return;
 
     setMessage((messages) => [
       ...messages,
       { type: "userMessage", content: newMessage },
     ]);
+
+    socket.emit("message", newMessage);
+
     setNewMessage("");
   };
 
@@ -104,7 +93,9 @@ function Chat() {
       </div>
 
       <div
-        className={`flex w-full max-w-[90%] md:max-w-[70%] mt-4 border-b min-w-[450px] transition-colors ease-linear duration-300 ${isFocused ? "border-[#f5ac19] " : "border-white"}`}
+        className={`flex w-full max-w-[90%] md:max-w-[70%] mt-4 border-b min-w-[450px] transition-colors ease-linear duration-300 ${
+          isFocused ? "border-[#f5ac19] " : "border-white"
+        }`}
       >
         <textarea
           value={newMessage}
