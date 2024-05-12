@@ -136,14 +136,14 @@ const Message = ({ msg }: { msg: Message }) => {
           className="w-[20px] rounded-full mr-2 select-none"
           draggable="false"
         />
-        <p className="select-none">
+        <p className="select-none font-semibold">
           {type === "botMessage" ? "Johanna" : "Daniel"}
         </p>
       </span>
 
       <span
         className={`
-        pb-1 pl-8 text-white m-0 select-none text-pretty text-justify break-words align-middle`}
+        pb-1 pl-8 text-white m-0 select-none text-sm text-pretty text-justify break-words align-middle`}
         style={{ wordBreak: "break-word" }}
       >
         {content}
