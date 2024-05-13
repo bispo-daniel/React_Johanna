@@ -2,7 +2,7 @@ import { JohannaGif } from "@/assets";
 
 function Info() {
   return (
-    <main className="flex items-center justify-evenly gap-10 m-4 pt-4 md:mx-10 select-none flex-col md:flex-row">
+    <main className="min-h-full flex flex-grow overflow-y-auto items-center justify-evenly gap-10 pt-4 md:mx-10 select-none flex-col md:flex-row">
       <div className="h-full flex flex-col items-start max-w-[500px] md:py-10">
         <h1 className="text-2xl mb-4 font-semibold text-[#f5ac19]">
           Sobre nós
@@ -16,12 +16,10 @@ function Info() {
           suficientes para que a Johanna tenha resposta para todas as suas
           perguntas.
         </p>
-
         <p className="text-start font-light text-sm pt-2">
           Ela é uma aprendiz contínua. Portanto, sinta-se à vontade para
           ensiná-la a qualquer momento...
         </p>
-
         <p className="text-start font-light text-sm pt-2">
           A equipe é composta por 5 rapazes:
         </p>
@@ -34,7 +32,6 @@ function Info() {
         <p className="text-start font-light text-sm pt-1">
           Pedro, Julio e Gustavo - Responsáveis pelas outras partes do projeto.
         </p>
-
         <p className="text-start font-light text-sm pt-2">
           No frontend, React Vite em TypeScript foi a escolha.
         </p>
@@ -46,7 +43,7 @@ function Info() {
 
       <img
         src={JohannaGif}
-        className="rounded-full w-[250px]"
+        className="rounded-full w-[250px] mb-8 md:mb-0"
         draggable="false"
       />
     </main>

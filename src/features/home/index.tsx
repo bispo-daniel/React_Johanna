@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 function Home() {
   return (
-    <main className="flex h-full md:h-fit items-center justify-between m-4 pb-8 py-4 md:m-28 lg:m-32 select-none flex-col md:flex-row">
+    <main className="min-h-full flex flex-grow overflow-y-auto items-center justify-evenly gap-10 pt-4 md:mx-10 select-none flex-col md:flex-row">
       <div className="h-full flex flex-col items-start max-w-[500px] md:py-10">
         <h1 className="text-2xl mb-4 font-semibold text-[#f5ac19]">
           Conheça a Johanna

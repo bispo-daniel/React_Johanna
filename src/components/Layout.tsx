@@ -68,9 +68,9 @@ const Layout = () => {
   };
 
   return (
-    <div className="flex min-h-full min-w-full relative z-50">
+    <div className="flex min-h-full min-w-full relative z-50 bg-[#301032]">
       <Navigator />
-      <div className="md:ml-[45px] w-full min-h-full px-8 md:px-0">
+      <div className="md:ml-[45px] w-full min-h-full px-8 md:px-0 bg-[#301032]">
         <Outlet />
       </div>
     </div>

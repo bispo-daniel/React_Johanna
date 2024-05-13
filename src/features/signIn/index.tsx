@@ -82,7 +82,7 @@ function SignIn() {
   }, [isSuccess]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center select-none">
+    <div className="min-h-full flex items-center justify-center select-none">
       <div className="p-8 rounded shadow-xl max-w-[450px] w-full bg-[#280c2a]">
         <form onSubmit={handleSubmit}>
           <input

@@ -74,7 +74,7 @@ function Chat() {
 
   return (
     <main
-      className="flex flex-col items-center justify-center min-h-full bg-transparent"
+      className="flex flex-col items-center justify-center min-h-full bg-transparent min-w-full overflow-hidden"
       onKeyUp={(e) => enterDown(e)}
     >
       <div className="rounded-lg w-full max-w-full min-h-full grow flex flex-col justify-between">
@@ -93,21 +93,20 @@ function Chat() {
       </div>
 
       <div
-        className={`flex w-full max-w-[90%] md:max-w-[70%] mt-4 border-b min-w-[450px] transition-colors ease-linear duration-300 ${
+        className={`min-w-[300px] w-full md:max-w-[70%] flex justify-between pb-2 border-b transition-colors ease-linear duration-300 ${
           isFocused ? "border-[#f5ac19] " : "border-white"
-        }`}
+        } `}
       >
-        <textarea
+        <input
           value={newMessage}
           placeholder="Digite sua mensagem..."
-          rows={1}
-          className="flex-1 px-8 resize-none bg-transparent rounded-full md:px-2 focus:outline-none color-black text-white"
+          className="w-[90%] bg-transparent pl-2 focus:outline-none"
           onChange={(e) => setNewMessage(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
         />
         <button
-          className="ml-2 bg-transparent text-white px-4 py-2 rounded mr-4 md:mr-0"
+          className="pr-2"
           onClick={() => sendMessage()}
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
@@ -137,13 +136,13 @@ const Message = ({ msg }: { msg: Message }) => {
           draggable="false"
         />
         <p className="select-none font-semibold">
-          {type === "botMessage" ? "Johanna" : "Daniel"}
+          {type === "botMessage" ? "Johanna" : "Usuário"}
         </p>
       </span>
 
       <span
         className={`
-        pb-1 pl-8 text-white m-0 select-none text-sm text-pretty text-justify break-words align-middle`}
+        pb-1 pl-11 text-white m-0 select-none text-sm text-pretty text-justify break-words align-middle`}
         style={{ wordBreak: "break-word" }}
       >
         {content}
