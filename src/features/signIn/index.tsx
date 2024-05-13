@@ -86,7 +86,7 @@ function SignIn() {
       <div className="p-8 rounded shadow-xl max-w-[450px] w-full bg-[#280c2a]">
         <form onSubmit={handleSubmit}>
           <input
-            name="nome"
+            name="username"
             type="text"
             className="block w-full border-b focus:border-[#f5ac19] transition-colors ease-linear duration-300 border-white bg-transparent mt-1 px-2 outline-none mb-2"
             placeholder="Nome"
@@ -102,7 +102,7 @@ function SignIn() {
             onChange={handleChange}
           />
           <InputMask
-            name="telefone"
+            name="telephone"
             type="text"
             mask="(99) 99999-9999"
             maskChar=""
