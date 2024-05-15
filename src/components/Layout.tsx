@@ -78,7 +78,7 @@ const Layout = () => {
       ref={appOutlet}
     >
       <Navigator />
-      <div className="md:ml-[45px] w-full min-h-full px-8 md:px-0 bg-[#301032]">
+      <div className="md:ml-[45px] w-full min-h-full px-4 md:px-0 bg-[#301032]">
         <Outlet />
       </div>
     </div>
