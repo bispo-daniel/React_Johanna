@@ -29,6 +29,7 @@ function Home() {
         src={JohannaImg}
         alt=""
         className="rounded-full w-[250px] pb-4"
+        style={{ zIndex: "999" }}
         draggable="false"
       />
     </main>

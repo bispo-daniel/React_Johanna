@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Outlet } from "react-router-dom";
 import Navigator from "./Navigator";
 
@@ -8,7 +8,7 @@ const Layout = () => {
     "#DDE6C0",
     "#69D4C4",
     "#1AC5C0",
-    "##1BA4BD",
+    "#1BA4BD",
     "#BA3A92",
     "#E72569",
     "#DF2B8B",
@@ -17,11 +17,13 @@ const Layout = () => {
     "#303070",
     "#FBDE67",
     "#FDCF62",
-    "##F9B03E",
+    "#F9B03E",
     "#F4963E",
     "#F26849",
     "#FFFFFF",
   ];
+
+  const appOutlet = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -60,7 +62,9 @@ const Layout = () => {
     star.style.height = `${size}px`;
     star.style.animationDuration = `${duration}s`;
 
-    document.body.appendChild(star);
+    if (appOutlet.current) {
+      appOutlet.current.appendChild(star);
+    }
 
     setTimeout(() => {
       star.remove();
@@ -68,7 +72,11 @@ const Layout = () => {
   };
 
   return (
-    <div className="flex min-h-full min-w-full relative z-50 bg-[#301032]">
+    <div
+      className="flex min-h-full min-w-full relative z-50 bg-[#301032]"
+      style={{ zIndex: "10" }}
+      ref={appOutlet}
+    >
       <Navigator />
       <div className="md:ml-[45px] w-full min-h-full px-8 md:px-0 bg-[#301032]">
         <Outlet />

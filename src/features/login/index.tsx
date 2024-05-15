@@ -39,7 +39,10 @@ function Login() {
 
   return (
     <div className="min-h-full flex items-center justify-center select-none">
-      <div className="p-8 rounded shadow-xl max-w-sm w-full bg-[#280c2a]">
+      <div
+        className="p-8 rounded shadow-xl max-w-sm w-full bg-[#280c2a]"
+        style={{ zIndex: "999" }}
+      >
         <form onSubmit={(e) => handleSubmit(e)}>
           <input
             name="email"

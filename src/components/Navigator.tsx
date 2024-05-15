@@ -10,19 +10,19 @@ import {
 function Navigator() {
   const items = [
     {
-      icon: <Home size="20" color="white" />,
+      icon: <Home size="20" />,
       href: "/",
     },
     {
-      icon: <Information size="20" color="white" />,
+      icon: <Information size="20" />,
       href: "/info",
     },
     {
-      icon: <Chatbox size="20" color="white" />,
+      icon: <Chatbox size="20" />,
       href: "/chat",
     },
     {
-      icon: <LogIn size="20" color="white" />,
+      icon: <LogIn size="20" />,
       href: "/login",
     },
   ];
@@ -39,9 +39,15 @@ function Navigator() {
   const toggleIsHoveringLine = () => setIsHoveringLine(!isHoveringLine);
 
   return (
-    <div className="min-h-full w-[65px] items-center fixed flex">
+    <div
+      className="min-h-full w-[65px] items-center fixed flex"
+      style={{ zIndex: "1000" }}
+    >
       {showNavigator ? (
-        <nav className="flex flex-col bg-[#301032] justify-between h-[300px] border-r border-t border-b border-white w-[45px] rounded-r-full   duration-100 overflow-hidden">
+        <nav
+          className="flex flex-col bg-[#301032] justify-between h-[300px] border-r border-t border-b border-white w-[45px] rounded-r-full   duration-100 overflow-hidden"
+          style={{ zIndex: "1000" }}
+        >
           {items.map(({ icon, href }) => (
             <Button icon={icon} href={href} key={href} />
           ))}
@@ -84,7 +90,7 @@ function Button({ icon, href }: ButtonProps) {
     <Link
       draggable="false"
       to={href}
-      className="hover:bg-[#0005] w-full h-full duration-300 transition-colors flex items-center justify-center"
+      className="hover:bg-[#fff1] w-full h-full duration-300 transition-colors flex items-center justify-center text-white hover:text-[#f5ac19]"
     >
       {icon}
     </Link>

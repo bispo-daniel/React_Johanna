@@ -74,7 +74,7 @@ function Chat() {
 
   return (
     <main
-      className="flex flex-col items-center justify-center min-h-full bg-transparent min-w-full overflow-hidden"
+      className="flex py-4 flex-col items-center justify-center min-h-full bg-transparent min-w-full overflow-hidden"
       onKeyUp={(e) => enterDown(e)}
     >
       <div className="rounded-lg w-full max-w-full min-h-full grow flex flex-col justify-between">
@@ -93,28 +93,29 @@ function Chat() {
       </div>
 
       <div
-        className={`min-w-[300px] w-full md:max-w-[70%] flex justify-between pb-2 border-b transition-colors ease-linear duration-300 ${
-          isFocused ? "border-[#f5ac19] " : "border-white"
-        } `}
+        className={`min-w-[300px] w-full md:max-w-[70%] bg-[#301032] relative flex items-center gap-4 py-2 px-4 border rounded-2xl transition-colors ease-linear duration-300 ${
+          isFocused ? "border-[#f5ac19]" : "border-white"
+        }`}
+        style={{ zIndex: "999" }}
       >
         <input
           value={newMessage}
           placeholder="Digite sua mensagem..."
-          className="w-[90%] bg-transparent pl-2 focus:outline-none"
+          className="w-full bg-transparent focus:outline-none flex-grow"
           onChange={(e) => setNewMessage(e.target.value)}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
         />
         <button
-          className="pr-2"
           onClick={() => sendMessage()}
           onMouseEnter={() => setIsHovering(true)}
           onMouseLeave={() => setIsHovering(false)}
+          className="flex-shrink-0"
         >
           <Send
             size={20}
             color={isHovering ? "#f5ac19" : "white"}
-            className="transition-colors ease-linear duration-300"
+            className="transition-colors ease-linear duration-300 mb-[1px]"
           />
         </button>
       </div>
@@ -132,10 +133,10 @@ const Message = ({ msg }: { msg: Message }) => {
         <img
           src={pfp}
           alt=""
-          className="w-[32px] h-[32px] rounded-full mr-2 select-none"
+          className="w-[32px] h-[32px] rounded-full mr-2 select-none mt-1"
           draggable="false"
         />
-        <p className="select-none font-semibold">
+        <p className="select-none font-semibold hover:text-[#f5ac19] transition-colors ease-linear duration-300">
           {type === "botMessage" ? "Johanna" : "Usuário"}
         </p>
       </span>
@@ -154,7 +155,10 @@ const Message = ({ msg }: { msg: Message }) => {
 const NoMessage = () => {
   return (
     <div className="w-full flex-col h-full flex items-center justify-center mt-4">
-      <div className="rounded-full border w-[200px] border-white">
+      <div
+        className="rounded-full border w-[200px] border-white bg-[#301032] transition-colors ease-linear duration-300 hover:border-[#f5ac19]"
+        style={{ zIndex: "999" }}
+      >
         <img
           src={JohannaNoBackgroundImg}
           alt=""

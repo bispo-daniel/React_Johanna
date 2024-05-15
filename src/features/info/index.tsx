@@ -44,6 +44,7 @@ function Info() {
       <img
         src={JohannaGif}
         className="rounded-full w-[250px] mb-8 md:mb-0"
+        style={{ zIndex: "999" }}
         draggable="false"
       />
     </main>

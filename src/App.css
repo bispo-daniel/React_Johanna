@@ -35,6 +35,7 @@ body {
   border-radius: 50%;
   pointer-events: none;
   animation: star-animation linear infinite;
+  z-index: 10;
 }
 
 @keyframes star-animation {

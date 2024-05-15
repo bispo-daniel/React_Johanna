@@ -83,7 +83,11 @@ function SignIn() {
 
   return (
     <div className="min-h-full flex items-center justify-center select-none">
-      <div className="p-8 rounded shadow-xl max-w-[450px] w-full bg-[#280c2a]">
+      <div
+        id="must not appear above"
+        className="p-8 rounded shadow-xl max-w-[450px] w-full bg-[#280c2a]"
+        style={{ zIndex: "999" }}
+      >
         <form onSubmit={handleSubmit}>
           <input
             name="username"
