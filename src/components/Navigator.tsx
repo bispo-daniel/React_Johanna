@@ -45,7 +45,7 @@ function Navigator() {
     >
       {showNavigator ? (
         <nav
-          className="flex flex-col bg-[#301032] justify-between h-[300px] border-r border-t border-b border-white w-[45px] rounded-r-full   duration-100 overflow-hidden"
+          className="flex flex-col bg-[#280c2a] justify-between h-[300px] border-r border-t border-b border-white w-[45px] rounded-r-full   duration-100 overflow-hidden"
           style={{ zIndex: "1000" }}
         >
           {items.map(({ icon, href }) => (
