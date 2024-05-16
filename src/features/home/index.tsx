@@ -31,6 +31,7 @@ function Home() {
         className="rounded-full w-[250px] pb-4"
         style={{ zIndex: "999" }}
         draggable="false"
+        loading="eager"
       />
     </main>
   );

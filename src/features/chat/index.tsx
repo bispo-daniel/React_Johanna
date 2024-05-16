@@ -135,6 +135,7 @@ const Message = ({ msg }: { msg: Message }) => {
           alt=""
           className="w-[32px] h-[32px] rounded-full mr-2 select-none mt-1"
           draggable="false"
+          loading="eager"
         />
         <p className="select-none font-semibold hover:text-[#f5ac19] transition-colors ease-linear duration-300">
           {type === "botMessage" ? "Johanna" : "Usuário"}
@@ -164,6 +165,7 @@ const NoMessage = () => {
           alt=""
           draggable="false"
           className="w-[200px] rounded-full select-none"
+          loading="eager"
         />
       </div>
       <h1 className="text-2xl select-none mt-4 font-semibold text-[#f5ac19]">
