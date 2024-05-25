@@ -3,9 +3,9 @@ import {
   LogIn,
   Information,
   Chatbox,
+  Power,
+  People,
 } from "@styled-icons/ionicons-outline";
-import { Users } from "@styled-icons/heroicons-solid";
-import { PowerOff } from "@styled-icons/fa-solid";
 import { ReactNode, useState, useEffect, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
@@ -35,14 +35,14 @@ const Navigator = () => {
       ];
 
       const superUserProtectedItems: NavItem[] = isAdmin
-        ? [{ icon: <Users size="20" />, path: "/users" }]
+        ? [{ icon: <People size="20" />, path: "/users" }]
         : [];
 
       return [
         ...defaultItems,
         ...protectedItems,
         ...superUserProtectedItems,
-        { icon: <PowerOff size="20" />, action: logout },
+        { icon: <Power size="20" />, action: logout },
       ];
     } else {
       return [...defaultItems, { icon: <LogIn size="20" />, path: "/login" }];

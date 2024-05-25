@@ -3,7 +3,7 @@ import { EyeOff2Outline, EyeOutline } from "@styled-icons/evaicons-outline";
 import { Link } from "react-router-dom";
 
 import { useAuthentication, AuthType } from "./api/auth";
-import { useTokenStorage } from "@/hooks/useTokenStorage";
+import { useAuth } from "@/auth-provider";
 
 function Login() {
   const [userAuth, setUserAuth] = useState<AuthType>({
@@ -11,7 +11,7 @@ function Login() {
     password: "",
   });
 
-  const { saveTokens } = useTokenStorage();
+  const { saveTokens } = useAuth();
 
   const [shouldSendReq, setShouldSendReq] = useState(false);
   const {

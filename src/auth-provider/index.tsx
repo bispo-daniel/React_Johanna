@@ -34,6 +34,7 @@ interface AccessTokenType {
 interface AuthContextType {
   user: AccessTokenType | null;
   logout: () => void;
+  saveTokens: (accessToken: string, refreshToken: string) => void;
   isAdmin: boolean;
 }
 
@@ -44,7 +45,7 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const { accessToken, clearTokens } = useTokenStorage();
+  const { accessToken, clearTokens, saveTokens } = useTokenStorage();
   const navigate = useNavigate();
 
   const decodeToken = (token: string): AccessTokenType | null => {
@@ -71,6 +72,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     () => ({
       user,
       logout,
+      saveTokens,
       isAdmin,
     }),
     [user]
