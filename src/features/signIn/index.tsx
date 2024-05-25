@@ -1,7 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { EyeOff2Outline, EyeOutline } from "@styled-icons/evaicons-outline";
 import { Link, useNavigate } from "react-router-dom";
-import InputMask from "react-input-mask";
 import { useCreateUserQuery, CreateUserType } from "./api/postUser";
 
 function SignIn() {
@@ -43,7 +42,11 @@ function SignIn() {
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
+    let { name, value } = e.target;
+
+    if (name === "telephone" && value.length > user.telephone.length) {
+      value = maskAndUnmaskNumber(value);
+    }
 
     setUser((prevUser) => ({
       ...prevUser,
@@ -105,17 +108,16 @@ function SignIn() {
             required
             onChange={handleChange}
           />
-          <InputMask
+          <input
             name="telephone"
             type="text"
-            mask="(99) 99999-9999"
-            maskChar=""
             className="block w-full border-b focus:border-[#f5ac19] transition-colors ease-linear duration-300 border-white bg-transparent mt-1 px-2 outline-none mb-2"
             placeholder="Celular"
+            maxLength={15}
             required
             onChange={handleChange}
+            value={user.telephone}
           />
-
           <div className="flex">
             {/* Select for days */}
             <select
@@ -289,5 +291,30 @@ function SignIn() {
     </div>
   );
 }
+
+const maskAndUnmaskNumber = (number: string) => {
+  if (!number) return "";
+
+  const unMasked = number.replace(/[^0-9]/g, "");
+  let masked = unMasked;
+
+  if (masked.length <= 2) {
+    masked = masked.replace(/(\d{1,2})/, "($1)");
+  }
+
+  if (masked.length === 3) {
+    masked = masked.replace(/(\d{2})(\d{1})/, "($1) $2");
+  }
+
+  if (masked.length >= 4 && masked.length <= 7) {
+    masked = masked.replace(/(\d{2})(\d{1,5})/, "($1) $2");
+  }
+
+  if (masked.length >= 8 && masked.length <= 12) {
+    masked = masked.replace(/(\d{2})(\d{5})(\d{1,4})/, "($1) $2-$3");
+  }
+
+  return masked;
+};
 
 export default SignIn;

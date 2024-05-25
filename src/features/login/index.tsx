@@ -1,7 +1,9 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { EyeOff2Outline, EyeOutline } from "@styled-icons/evaicons-outline";
 import { Link } from "react-router-dom";
+
 import { useAuthentication, AuthType } from "./api/auth";
+import { useTokenStorage } from "@/hooks/useTokenStorage";
 
 function Login() {
   const [userAuth, setUserAuth] = useState<AuthType>({
@@ -9,11 +11,15 @@ function Login() {
     password: "",
   });
 
+  const { saveTokens } = useTokenStorage();
+
   const [shouldSendReq, setShouldSendReq] = useState(false);
-  const { isError, isSuccess, isLoading } = useAuthentication(
-    shouldSendReq,
-    userAuth
-  );
+  const {
+    data: tokens,
+    isError,
+    isSuccess,
+    isLoading,
+  } = useAuthentication(shouldSendReq, userAuth);
 
   const [showPassword, setShowPassword] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
@@ -36,6 +42,14 @@ function Login() {
   useEffect(() => {
     setShouldSendReq(false);
   }, [isError]);
+
+  useEffect(() => {
+    if (isSuccess && !isLoading && tokens) {
+      const { accessToken, refreshToken } = tokens;
+
+      saveTokens(accessToken, refreshToken);
+    }
+  }, [isSuccess, isLoading, tokens]);
 
   return (
     <div className="min-h-full flex items-center justify-center select-none">

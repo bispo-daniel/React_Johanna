@@ -1,99 +1,206 @@
-import { Home, LogIn, Information } from "@styled-icons/ionicons-outline";
-import { Chatbox } from "@styled-icons/ionicons-outline";
-import { ReactNode, useState } from "react";
-import { Link } from "react-router-dom";
+import {
+  Home,
+  LogIn,
+  LogOut,
+  Information,
+  Chatbox,
+} from "@styled-icons/ionicons-outline";
+import { Users } from "@styled-icons/heroicons-solid";
+import { ReactNode, useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import {
   ChevronCompactRight,
   ChevronCompactLeft,
 } from "@styled-icons/bootstrap";
+import { useAuth } from "@/auth-provider";
+
+interface NavItem {
+  icon: ReactNode;
+  path?: string;
+  action?: () => void;
+}
 
 function Navigator() {
-  const items = [
+  const { user, isAdmin, logout } = useAuth();
+
+  const protectedItems: NavItem[] = [
+    {
+      icon: <Chatbox size="20" />,
+      path: "/chat",
+    },
+  ];
+
+  const superUserProtectedItems: NavItem[] = [
+    {
+      icon: <Users size="20" />,
+      path: "/users",
+    },
+  ];
+
+  const defaultItems: NavItem[] = [
     {
       icon: <Home size="20" />,
-      href: "/",
+      path: "/",
     },
     {
       icon: <Information size="20" />,
-      href: "/info",
-    },
-    {
-      icon: <Chatbox size="20" />,
-      href: "/chat",
-    },
-    {
-      icon: <LogIn size="20" />,
-      href: "/login",
+      path: "/info",
     },
   ];
+
+  const [items, setItems] = useState<NavItem[]>(() => {
+    let updatedItems = [...defaultItems];
+    if (user) {
+      updatedItems = [...updatedItems, ...protectedItems];
+      if (isAdmin) {
+        updatedItems = [...updatedItems, ...superUserProtectedItems];
+      }
+      updatedItems = [
+        ...updatedItems,
+        { icon: <LogOut size="20" />, action: logout },
+      ];
+    } else {
+      updatedItems = [
+        ...updatedItems,
+        { icon: <LogIn size="20" />, path: "/login" },
+      ];
+    }
+    return updatedItems;
+  });
+
+  useEffect(() => {
+    let updatedItems = [...defaultItems];
+
+    if (user) {
+      updatedItems = [...updatedItems, ...protectedItems];
+
+      if (isAdmin) {
+        updatedItems = [...updatedItems, ...superUserProtectedItems];
+      }
+
+      updatedItems = [
+        ...updatedItems,
+        { icon: <LogOut size="20" />, action: logout },
+      ];
+    } else {
+      updatedItems = [
+        ...updatedItems,
+        { icon: <LogIn size="20" />, path: "/login" },
+      ];
+    }
+
+    setItems(updatedItems);
+  }, [user, isAdmin]);
 
   const [showNavigator, setShowNavigator] = useState(true);
   const toggleShowNavigator = () => {
     setShowNavigator(!showNavigator);
     if (!showNavigator) {
-      setIsHoveringLine(false);
+      setShouldShowLine(false);
     }
   };
 
-  const [isHoveringLine, setIsHoveringLine] = useState(false);
-  const toggleIsHoveringLine = () => setIsHoveringLine(!isHoveringLine);
+  const [shouldShowLine, setShouldShowLine] = useState(true);
+  const toggleIsHoveringLine = () => setShouldShowLine(!shouldShowLine);
+
+  const screenWidth = window.screen.availWidth;
+  const isMobile = screenWidth < 768;
 
   return (
     <div
-      className="min-h-full w-[65px] items-center fixed flex"
+      className="min-h-full w-[65px] items-center fixed flex flex-row-reverse md:flex-row"
       style={{ zIndex: "1000" }}
     >
       {showNavigator ? (
         <nav
-          className="flex flex-col bg-[#280c2a] justify-between h-[300px] border-r border-t border-b border-white w-[45px] rounded-r-full   duration-100 overflow-hidden"
+          className="flex flex-col bg-[#280c2a] justify-between h-[300px] border-l md:border-l-0 md:border-r border-t border-b border-white w-[45px] rounded-l-full md:rounded-l-none md:rounded-r-full duration-100 overflow-hidden"
           style={{ zIndex: "1000" }}
         >
-          {items.map(({ icon, href }) => (
-            <Button icon={icon} href={href} key={href} />
+          {items.map((item, index) => (
+            <Button
+              key={index}
+              icon={item.icon}
+              path={item.path}
+              action={item.action}
+            />
           ))}
         </nav>
       ) : (
-        <span>
-          <ChevronCompactRight
-            size={20}
-            className="transition-all hover:text-[#f5ac19] duration-300"
-            onClick={toggleShowNavigator}
-          />
-        </span>
+        <>
+          {isMobile ? (
+            <ChevronCompactLeft
+              size={20}
+              className="transition-all hover:text-[#f5ac19] duration-300"
+              onClick={toggleShowNavigator}
+            />
+          ) : (
+            <ChevronCompactRight
+              size={20}
+              className="transition-all hover:text-[#f5ac19] duration-300"
+              onClick={toggleShowNavigator}
+            />
+          )}
+        </>
+      )}
+
+      {showNavigator && shouldShowLine && !isMobile && (
+        <div
+          className="mr-1 md:mr-0 md:ml-1 border border-white h-[20px]"
+          onMouseEnter={toggleIsHoveringLine}
+        />
       )}
 
       {showNavigator &&
-        (!isHoveringLine ? (
-          <ChevronCompactLeft
+        !shouldShowLine &&
+        (isMobile ? (
+          <ChevronCompactRight
             size={20}
             className="transition-all hover:text-[#f5ac19] duration-300"
             onMouseLeave={toggleIsHoveringLine}
             onClick={toggleShowNavigator}
           />
         ) : (
-          <div
-            className="ml-1 border border-white h-[20px]"
-            onMouseEnter={toggleIsHoveringLine}
+          <ChevronCompactLeft
+            size={20}
+            className="transition-all hover:text-[#f5ac19] duration-300"
+            onMouseLeave={toggleIsHoveringLine}
+            onClick={toggleShowNavigator}
           />
         ))}
     </div>
   );
 }
 
-type ButtonProps = {
+interface ButtonProps {
   icon: ReactNode;
-  href: string;
-};
+  path?: string;
+  action?: () => void;
+}
 
-function Button({ icon, href }: ButtonProps) {
+function Button({ icon, path, action }: ButtonProps) {
+  const location = useLocation();
+
+  if (path) {
+    return (
+      <Link
+        draggable="false"
+        to={path}
+        className={`hover:bg-[#fff1] w-full h-full duration-300 transition-colors flex items-center justify-center hover:text-[#f5ac19] ${
+          location.pathname === path ? "text-[#f5ac19]" : ""
+        }`}
+      >
+        {icon}
+      </Link>
+    );
+  }
+
   return (
-    <Link
-      draggable="false"
-      to={href}
-      className="hover:bg-[#fff1] w-full h-full duration-300 transition-colors flex items-center justify-center text-white hover:text-[#f5ac19]"
+    <button
+      onClick={action}
+      className="hover:bg-[#fff1] w-full h-full duration-300 transition-colors flex items-center justify-center hover:text-[#f5ac19]"
     >
       {icon}
-    </Link>
+    </button>
   );
 }
 

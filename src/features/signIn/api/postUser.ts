@@ -1,6 +1,6 @@
 import { QUERY_KEYS } from '@/config';
 import { useQuery } from 'react-query';
-import { responseOk } from '@/auth-provider';
+import { validateResponse } from '@/auth-provider';
 import { API_URL } from '@/config';
 
 export type CreateUserType = {
@@ -24,7 +24,7 @@ const createUser = async (userData: CreateUserType) => {
     }
   )
 
-  await responseOk(response);
+  await validateResponse(response);
 
   return response.status === 200;
 }

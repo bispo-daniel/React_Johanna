@@ -73,7 +73,7 @@ const Layout = () => {
 
   return (
     <div
-      className="flex min-h-full min-w-full relative z-50 bg-[#301032]"
+      className="flex min-h-full min-w-full relative z-50 bg-[#301032] flex-row-reverse md:flex-row"
       style={{ zIndex: "10" }}
       ref={appOutlet}
     >

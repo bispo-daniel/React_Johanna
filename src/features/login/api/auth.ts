@@ -1,10 +1,15 @@
 import { API_URL, QUERY_KEYS } from "@/config";
-import { responseOk } from "@/auth-provider";
+import { validateResponse } from "@/auth-provider";
 import { useQuery } from "react-query";
 
 export type AuthType = {
   email: string,
   password: string
+}
+
+type Tokens = {
+  accessToken: string;
+  refreshToken: string;
 }
 
 const authenticate = async (userAuth: AuthType) => {
@@ -18,9 +23,11 @@ const authenticate = async (userAuth: AuthType) => {
     body: auth
   })
 
-  await responseOk(response);
+  await validateResponse(response);
 
-  return response.status === 200;
+  const tokens: Tokens = await response.json();
+
+  return tokens;
 }
 
 export const useAuthentication = (enabled: boolean, auth: AuthType) =>
