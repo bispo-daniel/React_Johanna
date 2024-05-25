@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useMemo, ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTokenStorage } from "@/hooks/useTokenStorage";
-import { jwtDecode } from "jwt-decode";
-import { SUPER_USER, COMMOM_USER } from "@/config";
+import { jwtDecode, JwtPayload } from "jwt-decode";
+import { SUPER_USER, COMMOM_USER, API_URL } from "@/config";
 
 class CustomServerError extends Error {
   public statusCode: number;
@@ -21,21 +21,23 @@ export const validateResponse = async (response: Response) => {
   }
 };
 
-interface AccessTokenType {
-  sub: string;
+type AccessTokenType = JwtPayload & {
   id: string;
-  aud: string;
-  iss: string;
-  iat: Date;
-  exp: Date;
   role: typeof SUPER_USER | typeof COMMOM_USER;
-}
+};
+
+type RefreshTokenType = JwtPayload & {
+  id: string;
+  role: typeof SUPER_USER | typeof COMMOM_USER;
+};
 
 interface AuthContextType {
   user: AccessTokenType | null;
   logout: () => void;
   saveTokens: (accessToken: string, refreshToken: string) => void;
   isAdmin: boolean;
+  isAccessTokenExpired: boolean;
+  refreshAccessToken: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -44,18 +46,58 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const { accessToken, clearTokens, saveTokens } = useTokenStorage();
-  const navigate = useNavigate();
+const decodeToken = (
+  token: string
+): RefreshTokenType | AccessTokenType | null => {
+  try {
+    return jwtDecode<AccessTokenType | RefreshTokenType>(token);
+  } catch (error) {
+    console.error("Failed to decode token:", error);
+    return null;
+  }
+};
 
-  const decodeToken = (token: string): AccessTokenType | null => {
-    try {
-      return jwtDecode<AccessTokenType>(token);
-    } catch (error) {
-      console.error("Failed to decode token:", error);
-      return null;
-    }
-  };
+type RefreshTokenResponse = {
+  accessToken: string;
+};
+
+const refreshTokenReq = async (refreshToken: string) => {
+  const bodyWithRefreshToken = JSON.stringify({
+    refreshToken,
+  });
+
+  try {
+    const response = await fetch(`${API_URL}/refresh`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: bodyWithRefreshToken,
+    });
+
+    await validateResponse(response);
+
+    const responseBody: RefreshTokenResponse = await response.json();
+
+    const { accessToken } = responseBody;
+
+    return accessToken;
+  } catch (error) {
+    console.error(`Error trying to refresh token. Reason: ${error}`);
+
+    return null;
+  }
+};
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const {
+    accessToken,
+    refreshToken,
+    clearTokens,
+    saveTokens,
+    saveAccessToken,
+  } = useTokenStorage();
+  const navigate = useNavigate();
 
   const user = useMemo(() => {
     return accessToken ? decodeToken(accessToken) : null;
@@ -68,12 +110,38 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     navigate("/", { replace: true });
   };
 
+  const isAccessTokenExpired = user?.exp ? Date.now() > user.exp * 1000 : true;
+
+  const refreshTokenDecoded = refreshToken ? decodeToken(refreshToken) : null;
+
+  const isRefreshTokenExpired = refreshTokenDecoded?.exp
+    ? Date.now() > refreshTokenDecoded.exp * 1000
+    : true;
+
+  const refreshAccessToken = async () => {
+    if (!refreshToken || isRefreshTokenExpired) {
+      clearTokens();
+      return;
+    }
+
+    const newAccessToken = await refreshTokenReq(refreshToken);
+
+    if (newAccessToken === null) {
+      clearTokens();
+      return;
+    }
+
+    saveAccessToken(newAccessToken);
+  };
+
   const value = useMemo(
     () => ({
       user,
       logout,
       saveTokens,
       isAdmin,
+      isAccessTokenExpired,
+      refreshAccessToken,
     }),
     [user]
   );
