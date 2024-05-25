@@ -1,12 +1,12 @@
 import {
   Home,
   LogIn,
-  LogOut,
   Information,
   Chatbox,
 } from "@styled-icons/ionicons-outline";
 import { Users } from "@styled-icons/heroicons-solid";
-import { ReactNode, useState, useEffect } from "react";
+import { PowerOff } from "@styled-icons/fa-solid";
+import { ReactNode, useState, useEffect, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   ChevronCompactRight,
@@ -20,88 +20,51 @@ interface NavItem {
   action?: () => void;
 }
 
-function Navigator() {
+const Navigator = () => {
   const { user, isAdmin, logout } = useAuth();
 
-  const protectedItems: NavItem[] = [
-    {
-      icon: <Chatbox size="20" />,
-      path: "/chat",
-    },
-  ];
+  const getNavItems = useCallback((): NavItem[] => {
+    const defaultItems: NavItem[] = [
+      { icon: <Home size="20" />, path: "/" },
+      { icon: <Information size="20" />, path: "/info" },
+    ];
 
-  const superUserProtectedItems: NavItem[] = [
-    {
-      icon: <Users size="20" />,
-      path: "/users",
-    },
-  ];
-
-  const defaultItems: NavItem[] = [
-    {
-      icon: <Home size="20" />,
-      path: "/",
-    },
-    {
-      icon: <Information size="20" />,
-      path: "/info",
-    },
-  ];
-
-  const [items, setItems] = useState<NavItem[]>(() => {
-    let updatedItems = [...defaultItems];
     if (user) {
-      updatedItems = [...updatedItems, ...protectedItems];
-      if (isAdmin) {
-        updatedItems = [...updatedItems, ...superUserProtectedItems];
-      }
-      updatedItems = [
-        ...updatedItems,
-        { icon: <LogOut size="20" />, action: logout },
+      const protectedItems: NavItem[] = [
+        { icon: <Chatbox size="20" />, path: "/chat" },
+      ];
+
+      const superUserProtectedItems: NavItem[] = isAdmin
+        ? [{ icon: <Users size="20" />, path: "/users" }]
+        : [];
+
+      return [
+        ...defaultItems,
+        ...protectedItems,
+        ...superUserProtectedItems,
+        { icon: <PowerOff size="20" />, action: logout },
       ];
     } else {
-      updatedItems = [
-        ...updatedItems,
-        { icon: <LogIn size="20" />, path: "/login" },
-      ];
+      return [...defaultItems, { icon: <LogIn size="20" />, path: "/login" }];
     }
-    return updatedItems;
-  });
+  }, [user, isAdmin, logout]);
+
+  const [items, setItems] = useState<NavItem[]>(getNavItems);
 
   useEffect(() => {
-    let updatedItems = [...defaultItems];
-
-    if (user) {
-      updatedItems = [...updatedItems, ...protectedItems];
-
-      if (isAdmin) {
-        updatedItems = [...updatedItems, ...superUserProtectedItems];
-      }
-
-      updatedItems = [
-        ...updatedItems,
-        { icon: <LogOut size="20" />, action: logout },
-      ];
-    } else {
-      updatedItems = [
-        ...updatedItems,
-        { icon: <LogIn size="20" />, path: "/login" },
-      ];
-    }
-
-    setItems(updatedItems);
-  }, [user, isAdmin]);
+    setItems(getNavItems());
+  }, [getNavItems]);
 
   const [showNavigator, setShowNavigator] = useState(true);
   const toggleShowNavigator = () => {
-    setShowNavigator(!showNavigator);
+    setShowNavigator((prev) => !prev);
     if (!showNavigator) {
       setShouldShowLine(false);
     }
   };
 
   const [shouldShowLine, setShouldShowLine] = useState(true);
-  const toggleIsHoveringLine = () => setShouldShowLine(!shouldShowLine);
+  const toggleIsHoveringLine = () => setShouldShowLine((prev) => !prev);
 
   const screenWidth = window.screen.availWidth;
   const isMobile = screenWidth < 768;
@@ -169,7 +132,7 @@ function Navigator() {
         ))}
     </div>
   );
-}
+};
 
 interface ButtonProps {
   icon: ReactNode;
@@ -177,7 +140,7 @@ interface ButtonProps {
   action?: () => void;
 }
 
-function Button({ icon, path, action }: ButtonProps) {
+const Button = ({ icon, path, action }: ButtonProps) => {
   const location = useLocation();
 
   if (path) {
@@ -202,6 +165,6 @@ function Button({ icon, path, action }: ButtonProps) {
       {icon}
     </button>
   );
-}
+};
 
 export default Navigator;
