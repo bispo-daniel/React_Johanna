@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import { Layout } from "../components";
 import { Home, Info, Login, SignIN, Chat, Users } from "../features";
@@ -23,6 +23,7 @@ export const Router = () => {
               path="/users"
               element={<ProtectedRoute element={<Users />} adminOnly />}
             />
+            <Route path="*" element={<Navigate to="/" replace={true} />} />
           </Route>
         </Routes>
       </AuthProvider>
