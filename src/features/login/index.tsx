@@ -1,11 +1,13 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { EyeOff2Outline, EyeOutline } from "@styled-icons/evaicons-outline";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useAuthentication, AuthType } from "./api/auth";
 import { useAuth } from "@/auth-provider";
 
 function Login() {
+  const navigate = useNavigate();
+
   const [userAuth, setUserAuth] = useState<AuthType>({
     email: "",
     password: "",
@@ -48,6 +50,10 @@ function Login() {
       const { accessToken, refreshToken } = tokens;
 
       saveTokens(accessToken, refreshToken);
+
+      setTimeout(() => {
+        navigate("/chat");
+      }, 1000);
     }
   }, [isSuccess, isLoading, tokens]);
 
