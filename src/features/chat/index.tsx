@@ -2,7 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { Send } from "@styled-icons/boxicons-solid";
 import { io, Socket } from "socket.io-client";
 
-import { JohannaImg, defaultPfp, JohannaNoBackgroundImg } from "@/assets";
+import {
+  JohannaImg,
+  defaultPfp,
+  JohannaNoBackgroundImg,
+  suggestedMessages,
+  SuggestedMessages,
+} from "@/assets";
 import { SOCKET_URL } from "@/config";
 
 type Message = {
@@ -72,6 +78,9 @@ function Chat() {
     }
   }, [messages]);
 
+  const screenWidth = window.screen.availWidth;
+  const isMobile = screenWidth < 768;
+
   return (
     <main
       className="flex py-4 flex-col items-center justify-center min-h-full bg-transparent min-w-full overflow-hidden"
@@ -79,7 +88,20 @@ function Chat() {
     >
       <div className="rounded-lg w-full max-w-full min-h-full grow flex flex-col justify-between">
         {messages.length === 0 ? (
-          <NoMessage />
+          <NoMessage
+            isMobile={isMobile}
+            addSuggestedMessage={(message: string) => {
+              setMessage((messages) => [
+                ...messages,
+
+                { type: "userMessage", content: message },
+              ]);
+
+              if (socket) {
+                socket.emit("message", message);
+              }
+            }}
+          />
         ) : (
           <div className="overflow-y-auto h-0 flex-grow flex justify-center">
             <div className="flex flex-col space-y-2 w-full max-w-[90%] md:max-w-[70%]">
@@ -96,7 +118,7 @@ function Chat() {
         className={`min-w-[300px] w-full md:max-w-[70%] bg-[#301032] relative flex items-center gap-4 py-2 px-4 border rounded-2xl transition-colors ease-linear duration-300 ${
           isFocused ? "border-[#f5ac19]" : "border-white"
         }`}
-        style={{ zIndex: "999" }}
+        style={{ zIndex: "1000" }}
       >
         <input
           value={newMessage}
@@ -106,6 +128,7 @@ function Chat() {
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
         />
+
         <button
           onClick={() => sendMessage()}
           onMouseEnter={() => setIsHovering(true)}
@@ -153,24 +176,91 @@ const Message = ({ msg }: { msg: Message }) => {
   );
 };
 
-const NoMessage = () => {
+type NoMessage = {
+  isMobile: boolean;
+  addSuggestedMessage: (message: string) => void;
+};
+
+const NoMessage = ({ isMobile, addSuggestedMessage }: NoMessage) => {
+  const numberOfMessages = isMobile ? 2 : 4;
+
+  const getRandomMessages = (messages: SuggestedMessages, count: number) => {
+    const shuffled = [...messages].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+  };
+
+  const randomMessages = getRandomMessages(suggestedMessages, numberOfMessages);
+
   return (
-    <div className="w-full flex-col h-full flex items-center justify-center mt-4">
-      <div
-        className="rounded-full border w-[200px] border-white bg-[#301032] transition-colors ease-linear duration-300 hover:border-[#f5ac19]"
-        style={{ zIndex: "999" }}
-      >
-        <img
-          src={JohannaNoBackgroundImg}
-          alt=""
-          draggable="false"
-          className="w-[200px] rounded-full select-none"
-          loading="eager"
-        />
+    <div className="no-message w-full flex-col h-full flex items-center justify-between flex-grow my-4">
+      <div className="flex flex-col items-center justify-center">
+        <div
+          className="rounded-full border w-[200px] border-white bg-[#301032] transition-colors ease-linear duration-300 hover:border-[#f5ac19]"
+          style={{ zIndex: "999" }}
+        >
+          <img
+            src={JohannaNoBackgroundImg}
+            alt=""
+            draggable="false"
+            className="w-[200px] rounded-full select-none"
+            loading="eager"
+          />
+        </div>
+
+        <h1 className="text-2xl select-none mt-4 font-semibold text-[#f5ac19]">
+          Como posso ajudar hoje?
+        </h1>
       </div>
-      <h1 className="text-2xl select-none mt-4 font-semibold text-[#f5ac19]">
-        Como posso ajudar hoje?
-      </h1>
+
+      <div className="suggested-messages flex flex-wrap min-w-[300px] w-full md:max-w-[70%] justify-between gap-4 px-1">
+        {randomMessages.map((message, index) => (
+          <SuggestedMessageButton
+            key={index}
+            title={message.title}
+            message={message.message}
+            onClick={() => addSuggestedMessage(message.message)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+type SuggestedMessageButtonProps = {
+  title: string;
+  message: string;
+  onClick: () => void;
+};
+
+const SuggestedMessageButton = ({
+  title,
+  message,
+  onClick,
+}: SuggestedMessageButtonProps) => {
+  const [isHovering, setIsHovering] = useState(false);
+
+  return (
+    <div
+      className="group border select-none border-white rounded-2xl truncate w-full md:max-w-[48%] flex py-1 px-3 text-sm items-center justify-between hover:border-[#f5ac19] transition-colors ease-linear duration-300"
+      onClick={onClick}
+    >
+      <div className="gap-[3px] flex flex-col items-start flex-grow truncate">
+        <p className="font-semibold">{title}</p>
+
+        <p className="truncate max-w-[95%]">{message.trim()}</p>
+      </div>
+
+      <button
+        className="flex-shrink-0 md:hidden md:group-hover:block"
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
+      >
+        <Send
+          size={20}
+          color={isHovering ? "#f5ac19" : "white"}
+          className="transition-colors ease-linear duration-300 mb-[1px] hover:text-black"
+        />
+      </button>
     </div>
   );
 };
