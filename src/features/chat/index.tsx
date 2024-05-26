@@ -10,6 +10,7 @@ import {
   SuggestedMessages,
 } from "@/assets";
 import { SOCKET_URL } from "@/config";
+import { useAuth } from "@/auth-provider";
 
 type Message = {
   type: "userMessage" | "botMessage";
@@ -22,6 +23,10 @@ function Chat() {
   const [isHovering, setIsHovering] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isFocused, setIsFocused] = useState(false);
+
+  const { user } = useAuth();
+
+  const username = user?.username || "Usuário";
 
   const [socket, setSocket] = useState<Socket | null>(null);
 
@@ -106,7 +111,7 @@ function Chat() {
           <div className="overflow-y-auto h-0 flex-grow flex justify-center">
             <div className="flex flex-col space-y-2 w-full max-w-[90%] md:max-w-[70%]">
               {messages.map((message, key) => (
-                <Message key={key} msg={message} />
+                <Message key={key} msg={message} username={username} />
               ))}
               <div ref={messagesEndRef} />
             </div>
@@ -146,7 +151,7 @@ function Chat() {
   );
 }
 
-const Message = ({ msg }: { msg: Message }) => {
+const Message = ({ msg, username }: { msg: Message; username: string }) => {
   const { type, content } = msg;
   const pfp = type === "botMessage" ? JohannaImg : defaultPfp;
 
@@ -161,7 +166,7 @@ const Message = ({ msg }: { msg: Message }) => {
           loading="eager"
         />
         <p className="select-none font-semibold hover:text-[#f5ac19] transition-colors ease-linear duration-300">
-          {type === "botMessage" ? "Johanna" : "Usuário"}
+          {type === "botMessage" ? "Johanna" : username}
         </p>
       </span>
 

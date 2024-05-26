@@ -23,6 +23,7 @@ export const validateResponse = async (response: Response) => {
 
 type AccessTokenType = JwtPayload & {
   id: string;
+  username: string;
   role: typeof SUPER_USER | typeof COMMOM_USER;
 };
 
@@ -46,13 +47,20 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-const decodeToken = (
-  token: string
-): RefreshTokenType | AccessTokenType | null => {
+const decodeAccessToken = (token: string): AccessTokenType | null => {
   try {
-    return jwtDecode<AccessTokenType | RefreshTokenType>(token);
+    return jwtDecode<AccessTokenType>(token);
   } catch (error) {
-    console.error("Failed to decode token:", error);
+    console.error("Failed to decode access token:", error);
+    return null;
+  }
+};
+
+const decodeRefreshToken = (token: string): RefreshTokenType | null => {
+  try {
+    return jwtDecode<RefreshTokenType>(token);
+  } catch (error) {
+    console.error("Failed to decode refresh token:", error);
     return null;
   }
 };
@@ -100,7 +108,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const navigate = useNavigate();
 
   const user = useMemo(() => {
-    return accessToken ? decodeToken(accessToken) : null;
+    return accessToken ? decodeAccessToken(accessToken) : null;
   }, [accessToken]);
 
   const isAdmin = user !== null && user.role === SUPER_USER;
@@ -112,7 +120,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const isAccessTokenExpired = user?.exp ? Date.now() > user.exp * 1000 : true;
 
-  const refreshTokenDecoded = refreshToken ? decodeToken(refreshToken) : null;
+  const refreshTokenDecoded = refreshToken
+    ? decodeRefreshToken(refreshToken)
+    : null;
 
   const isRefreshTokenExpired = refreshTokenDecoded?.exp
     ? Date.now() > refreshTokenDecoded.exp * 1000
