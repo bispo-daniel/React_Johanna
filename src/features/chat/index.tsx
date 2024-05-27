@@ -20,9 +20,7 @@ type Message = {
 function Chat() {
   const [messages, setMessage] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState("");
-  const [isHovering, setIsHovering] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [isFocused, setIsFocused] = useState(false);
 
   const { user } = useAuth();
 
@@ -120,30 +118,20 @@ function Chat() {
       </div>
 
       <div
-        className={`min-w-[300px] w-full md:max-w-[70%] bg-[#301032] relative flex items-center gap-4 py-2 px-4 border rounded-2xl transition-colors ease-linear duration-300 ${
-          isFocused ? "border-[#f5ac19]" : "border-white"
-        }`}
-        style={{ zIndex: "1000" }}
+        className="focus-within:border-[#f5ac19] group min-w-[300px] w-full md:max-w-[70%] bg-[#301032] relative flex items-center gap-4 py-2 px-4 border border-white rounded-2xl transition-colors ease-linear duration-300"
+        style={{ zIndex: 1000 }}
       >
         <input
           value={newMessage}
           placeholder="Digite sua mensagem..."
-          className="w-full bg-transparent focus:outline-none flex-grow"
+          className="message-input w-full bg-transparent focus:outline-none flex-grow"
           onChange={(e) => setNewMessage(e.target.value)}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
         />
-
-        <button
-          onClick={() => sendMessage()}
-          onMouseEnter={() => setIsHovering(true)}
-          onMouseLeave={() => setIsHovering(false)}
-          className="flex-shrink-0"
-        >
+        <button onClick={() => sendMessage()} className="flex-shrink-0">
           <Send
             size={20}
-            color={isHovering ? "#f5ac19" : "white"}
-            className="transition-colors ease-linear duration-300 mb-[1px]"
+            color="white"
+            className="transition-colors ease-linear duration-300 mb-[1px] hover:text-[#f5ac19]"
           />
         </button>
       </div>
@@ -263,7 +251,7 @@ const SuggestedMessageButton = ({
         <Send
           size={20}
           color={isHovering ? "#f5ac19" : "white"}
-          className="transition-colors ease-linear duration-300 mb-[1px] hover:text-black"
+          className="transition-colors ease-linear duration-300 mb-[1px]"
         />
       </button>
     </div>
