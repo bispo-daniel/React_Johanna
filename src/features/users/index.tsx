@@ -175,7 +175,7 @@ const UserCard: React.FC<Omit<User, "id">> = ({
 
       <div className="text-white text-start flex flex-col gap-1">
         <span className="block font-semibold">{username}</span>
-        <p className="text-sm indent-2">{age}</p>
+        <p className="text-sm indent-2">{age}y</p>
         <p className="text-sm indent-2">{telephone}</p>
         <p className="text-sm indent-2">
           {role === "ADMIN" ? "Administrador" : "Aluno"}
