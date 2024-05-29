@@ -6,7 +6,7 @@ import {
   JohannaImg,
   defaultPfp,
   JohannaNoBackgroundImg,
-  suggestedMessages,
+  suggestedMessages as suggestedMessagesArray,
   SuggestedMessages,
 } from "@/assets";
 import { SOCKET_URL } from "@/config";
@@ -84,6 +84,29 @@ function Chat() {
   const screenWidth = window.screen.availWidth;
   const isMobile = screenWidth < 768;
 
+  const getRandomSuggestedMessages = (
+    messages: SuggestedMessages,
+    count: number
+  ) => {
+    const shuffled = [...messages].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, count);
+  };
+
+  const numberOfMessages = isMobile ? 2 : 4;
+
+  const randomSuggestedMessages = getRandomSuggestedMessages(
+    suggestedMessagesArray,
+    numberOfMessages
+  );
+
+  const [suggestedMessages, setSuggestedMessages] = useState<SuggestedMessages>(
+    randomSuggestedMessages
+  );
+
+  useEffect(() => {
+    setSuggestedMessages(randomSuggestedMessages);
+  }, [numberOfMessages]);
+
   return (
     <main
       className="flex py-4 flex-col items-center justify-center min-h-full bg-transparent min-w-full overflow-hidden"
@@ -92,7 +115,7 @@ function Chat() {
       <div className="rounded-lg w-full max-w-full min-h-full grow flex flex-col justify-between">
         {messages.length === 0 ? (
           <NoMessage
-            isMobile={isMobile}
+            suggestedMessages={suggestedMessages}
             addSuggestedMessage={(message: string) => {
               setMessage((messages) => [
                 ...messages,
@@ -170,20 +193,11 @@ const Message = ({ msg, username }: { msg: Message; username: string }) => {
 };
 
 type NoMessage = {
-  isMobile: boolean;
   addSuggestedMessage: (message: string) => void;
+  suggestedMessages: SuggestedMessages;
 };
 
-const NoMessage = ({ isMobile, addSuggestedMessage }: NoMessage) => {
-  const numberOfMessages = isMobile ? 2 : 4;
-
-  const getRandomMessages = (messages: SuggestedMessages, count: number) => {
-    const shuffled = [...messages].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, count);
-  };
-
-  const randomMessages = getRandomMessages(suggestedMessages, numberOfMessages);
-
+const NoMessage = ({ addSuggestedMessage, suggestedMessages }: NoMessage) => {
   return (
     <div className="no-message w-full flex-col h-full flex items-center justify-between flex-grow my-4">
       <div className="flex flex-col items-center justify-center">
@@ -206,7 +220,7 @@ const NoMessage = ({ isMobile, addSuggestedMessage }: NoMessage) => {
       </div>
 
       <div className="suggested-messages flex flex-wrap min-w-[300px] w-full md:max-w-[70%] justify-between gap-4 px-1">
-        {randomMessages.map((message, index) => (
+        {suggestedMessages.map((message, index) => (
           <SuggestedMessageButton
             key={index}
             title={message.title}
