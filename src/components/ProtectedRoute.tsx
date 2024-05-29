@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import { useAuth } from "@/auth-provider";
+import {
+  useAuth,
+  isAccessTokenExpiredSync,
+} from "@/auth-provider";
 import Spinner from "./Spinner";
 
 interface ProtectedRouteProps {
@@ -24,11 +27,14 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     pathname === "/chat" || pathname === "/users";
 
   useEffect(() => {
+    const isExpired = isAccessTokenExpiredSync();
+
     const checkToken = async () => {
       console.log(`+++++ DEBUG: Checking token expiration...`);
 
       console.log(`+++++ DEBUG: isAccessTokenExpired: ${isAccessTokenExpired}`);
-      if (isAccessTokenExpired) {
+      console.log(`+++++ DEBUG: isExpired: ${isExpired}`);
+      if (isAccessTokenExpired || isExpired) {
         await refreshAccessToken();
       }
       setIsLoading(false);
