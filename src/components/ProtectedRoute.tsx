@@ -25,6 +25,9 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
 
   useEffect(() => {
     const checkToken = async () => {
+      console.log(`+++++ DEBUG: Checking token expiration...`);
+
+      console.log(`+++++ DEBUG: isAccessTokenExpired: ${isAccessTokenExpired}`);
       if (isAccessTokenExpired) {
         await refreshAccessToken();
       }
