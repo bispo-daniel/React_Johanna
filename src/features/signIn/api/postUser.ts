@@ -1,4 +1,4 @@
-import { QUERY_KEYS } from '@/config';
+import { REACT_QUERY_KEYS } from '@/config';
 import { useQuery } from 'react-query';
 import { validateResponse } from '@/auth-provider';
 import { API_URL } from '@/config';
@@ -31,7 +31,7 @@ const createUser = async (userData: CreateUserType) => {
 
 export const useCreateUserQuery = (enabled: boolean, userData: CreateUserType) =>
   useQuery({
-    queryKey: [QUERY_KEYS.createUser],
+    queryKey: [REACT_QUERY_KEYS.createUser],
     queryFn: () => createUser(userData),
     enabled,
     retry: false,

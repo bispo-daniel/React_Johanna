@@ -1,4 +1,4 @@
-import { API_URL, QUERY_KEYS } from "@/config";
+import { API_URL, REACT_QUERY_KEYS } from "@/config";
 import { validateResponse } from "@/auth-provider";
 import { useQuery } from "react-query";
 
@@ -32,7 +32,7 @@ const authenticate = async (userAuth: AuthType) => {
 
 export const useAuthentication = (enabled: boolean, auth: AuthType) =>
   useQuery({
-    queryKey: [QUERY_KEYS.auth],
+    queryKey: [REACT_QUERY_KEYS.auth],
     queryFn: () => authenticate(auth),
     enabled,
     retry: false,
