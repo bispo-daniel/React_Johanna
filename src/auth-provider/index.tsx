@@ -98,15 +98,19 @@ const refreshTokenReq = async (refreshToken: string) => {
 };
 
 export const isAccessTokenExpiredSync = () => {
-  const accessToken = localStorage.getItem("accessToken");
+  const accessToken = localStorage.getItem("access_token");
 
   if (!accessToken) return true;
 
   const accessTokenDecoded = decodeAccessToken(accessToken);
-  return accessTokenDecoded?.exp
+
+  const isExpired = accessTokenDecoded?.exp
     ? Date.now() > accessTokenDecoded.exp * 1000
     : true;
+
+  return isExpired;
 };
+
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const {
     accessToken,
