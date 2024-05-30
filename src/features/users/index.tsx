@@ -3,8 +3,6 @@ import { User, useUsersQuery } from "./api/getUsers";
 function Users() {
   const { data: users } = useUsersQuery();
 
-  console.log(users);
-
   const usersList = users || [];
 
   return (
