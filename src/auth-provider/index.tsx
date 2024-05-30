@@ -4,7 +4,7 @@ import { useTokenStorage } from "@/hooks/useTokenStorage";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { SUPER_USER, COMMOM_USER, API_URL } from "@/config";
 
-class CustomServerError extends Error {
+export class CustomServerError extends Error {
   public statusCode: number;
 
   constructor(message: string, statusCode: number) {
@@ -97,8 +97,10 @@ const refreshTokenReq = async (refreshToken: string) => {
   }
 };
 
+export const getAccessToken = () => localStorage.getItem("access_token");
+
 export const isAccessTokenExpiredSync = () => {
-  const accessToken = localStorage.getItem("access_token");
+  const accessToken = getAccessToken();
 
   if (!accessToken) return true;
 
