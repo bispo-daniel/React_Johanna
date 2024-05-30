@@ -17,7 +17,9 @@ const getUsers = async () => {
 
   if (!accessToken) throw new CustomServerError("Missing token to fetch users", 400);
 
-  const token = `Bearer ${accessToken}`;
+  const access = accessToken.replace(/"/g, "");
+
+  const token = `Bearer ${access}`;
 
   const response = await fetch(`${API_URL}/users`, {
     headers: {
