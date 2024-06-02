@@ -143,7 +143,7 @@ const NavButton = ({ title, icon, toggleView, active }: ButtonProps) => {
       className="text-sm px-2 py-1 hover:bg-[#fff1] rounded flex items-end"
       onClick={toggleView}
     >
-      <span className={`${isMobile && "pr-2"} ${active && "text-[#f5ac19]"}`}>{icon}</span>
+      <span className={`${!isMobile && "pr-2"} ${active && "text-[#f5ac19]"}`}>{icon}</span>
       {!isMobile && <span className="hidden md:block">{title}</span>}
     </button>
   );
