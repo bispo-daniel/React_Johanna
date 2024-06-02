@@ -243,7 +243,7 @@ function SignIn() {
           {verificationPassword && (
             <div className="w-full flex justify-end mt-1">
               <span
-                className={`text-[12px] ${
+                className={`text-xs ${
                   isPasswordVerified ? "text-green-500" : "text-red-500"
                 }`}
               >

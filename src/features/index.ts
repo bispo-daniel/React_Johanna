@@ -4,3 +4,4 @@ export { default as Login } from "./login";
 export { default as SignIN } from "./signIn";
 export { default as Chat } from "./chat";
 export { default as Users } from "./users";
+export { default as UserSettings } from "./user-settings";

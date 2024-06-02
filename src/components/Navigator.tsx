@@ -5,6 +5,7 @@ import {
   Chatbox,
   Power,
   People,
+  Settings,
 } from "@styled-icons/ionicons-outline";
 import { ReactNode, useState, useEffect, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -25,27 +26,28 @@ const Navigator = () => {
 
   const getNavItems = useCallback((): NavItem[] => {
     const defaultItems: NavItem[] = [
-      { icon: <Home size="20" />, path: "/" },
-      { icon: <Information size="20" />, path: "/info" },
+      { icon: <Home size="18" />, path: "/" },
+      { icon: <Information size="18" />, path: "/info" },
     ];
 
     if (user) {
       const protectedItems: NavItem[] = [
-        { icon: <Chatbox size="20" />, path: "/chat" },
+        { icon: <Chatbox size="18" />, path: "/chat" },
+        { icon: <Settings size="18" />, path: "/user-settings" },
       ];
 
       const superUserProtectedItems: NavItem[] = isAdmin
-        ? [{ icon: <People size="20" />, path: "/users" }]
+        ? [{ icon: <People size="18" />, path: "/users" }]
         : [];
 
       return [
         ...defaultItems,
         ...protectedItems,
         ...superUserProtectedItems,
-        { icon: <Power size="20" />, action: logout },
+        { icon: <Power size="18" />, action: logout },
       ];
     } else {
-      return [...defaultItems, { icon: <LogIn size="20" />, path: "/login" }];
+      return [...defaultItems, { icon: <LogIn size="18" />, path: "/login" }];
     }
   }, [user, isAdmin, logout]);
 
@@ -76,7 +78,7 @@ const Navigator = () => {
     >
       {showNavigator ? (
         <nav
-          className="flex flex-col bg-[#280c2a] justify-between h-[300px] border-l md:border-l-0 md:border-r border-t border-b border-white w-[45px] rounded-l-full md:rounded-l-none md:rounded-r-full duration-100 overflow-hidden"
+          className="flex flex-col bg-[#280c2a] justify-between h-[310px] border-l md:border-l-0 md:border-r border-t border-b border-white w-[40px] rounded-l-full md:rounded-l-none md:rounded-r-full duration-100 overflow-hidden"
           style={{ zIndex: "1000" }}
         >
           {items.map((item, index) => (

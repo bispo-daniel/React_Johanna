@@ -1,7 +1,15 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
 import { Layout } from "../components";
-import { Home, Info, Login, SignIN, Chat, Users } from "../features";
+import {
+  Home,
+  Info,
+  Login,
+  SignIN,
+  Chat,
+  Users,
+  UserSettings,
+} from "../features";
 import { AuthProvider } from "@/auth-provider";
 import { ProtectedRoute } from "@/components";
 
@@ -18,6 +26,10 @@ export const Router = () => {
             <Route
               path="/chat"
               element={<ProtectedRoute element={<Chat />} />}
+            />
+            <Route
+              path="/user-settings"
+              element={<ProtectedRoute element={<UserSettings />} />}
             />
             <Route
               path="/users"
