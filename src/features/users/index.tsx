@@ -6,7 +6,7 @@ function Users() {
   const usersList = users || [];
 
   return (
-    <main className="min-h-screen flex flex-grow flex-wrap overflow-y-auto items-start justify-evenly gap-10 py-4 md:mx-12 select-none flex-col md:flex-row">
+    <main className="min-h-screen flex flex-grow flex-wrap overflow-y-auto items-center md:items-start justify-evenly gap-10 py-4 md:mx-12 select-none flex-col md:flex-row">
       <div className="grow shrink-0 w-full text-start pl-12">
         <h1 className="font-semibold text-[#f5ac19] text-2xl ">Usuários</h1>
       </div>
