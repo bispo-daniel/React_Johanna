@@ -273,7 +273,11 @@ const DeleteAccount = () => {
   };
 
   useEffect(() => {
-    if (isSuccess) logout();
+    if (isSuccess) {
+      setTimeout(() => {
+        logout();
+      }, 1000);
+    }
   }, [isSuccess]);
 
   return (
