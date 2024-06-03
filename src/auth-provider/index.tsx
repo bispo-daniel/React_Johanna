@@ -131,14 +131,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     saveTokens,
     saveAccessToken,
   } = useTokenStorage();
-  const [user, setUser] = useState<AccessTokenType | null>(
-    accessToken ? decodeAccessToken(accessToken) : null
-  );
+  // const [user, setUser] = useState<AccessTokenType | null>(
+  //   accessToken ? decodeAccessToken(accessToken) : null
+  // );
+  const user = useMemo(() => {
+    return accessToken ? decodeAccessToken(accessToken) : null;
+  }, [accessToken]);
 
   const isAdmin = user !== null && user.role === SUPER_USER;
 
   const logout = () => {
-    setUser(null);
+    // setUser(null);
     clearTokens();
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
