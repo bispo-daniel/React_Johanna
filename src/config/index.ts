@@ -6,5 +6,7 @@ export const COMMOM_USER = import.meta.env.VITE_COMMOM_USER as string;
 export const REACT_QUERY_KEYS = {
   "auth": "auth",
   "createUser": "createUser",
-  "users": "users"
+  "users": "users",
+  "changePassword": "changePassword",
+  "deleteAccount": "deleteAccount",
 }
