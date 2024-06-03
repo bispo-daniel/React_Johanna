@@ -8,7 +8,8 @@ import { useAuth } from "@/auth-provider";
 function Login() {
   const navigate = useNavigate();
   const { state } = useLocation();
-  const { email: emailFromLocation, password: passwordFromLocation } = state;
+  const { email: emailFromLocation, password: passwordFromLocation } =
+    state || { email: "", password: "" };
 
   const [userAuth, setUserAuth] = useState<AuthType>({
     email: "",
