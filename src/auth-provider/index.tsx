@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useMemo, ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
 import { useTokenStorage } from "@/hooks/useTokenStorage";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { SUPER_USER, COMMOM_USER, API_URL } from "@/config";
@@ -121,8 +120,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     saveTokens,
     saveAccessToken,
   } = useTokenStorage();
-  const navigate = useNavigate();
-
   const user = useMemo(() => {
     return accessToken ? decodeAccessToken(accessToken) : null;
   }, [accessToken]);
@@ -131,7 +128,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const logout = () => {
     clearTokens();
-    navigate("/", { replace: true });
+    window.location.href = "https://johannagpt.netlify.app";
   };
 
   const isAccessTokenExpired = user?.exp ? Date.now() > user.exp * 1000 : true;
