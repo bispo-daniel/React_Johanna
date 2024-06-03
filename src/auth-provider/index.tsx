@@ -51,6 +51,7 @@ const decodeAccessToken = (token: string): AccessTokenType | null => {
     return jwtDecode<AccessTokenType>(token);
   } catch (error) {
     console.error("Failed to decode access token:", error);
+    localStorage.removeItem("access_token");
     return null;
   }
 };
@@ -60,6 +61,7 @@ const decodeRefreshToken = (token: string): RefreshTokenType | null => {
     return jwtDecode<RefreshTokenType>(token);
   } catch (error) {
     console.error("Failed to decode refresh token:", error);
+    localStorage.removeItem("refresh_token");
     return null;
   }
 };
