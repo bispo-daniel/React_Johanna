@@ -18,9 +18,6 @@ function SignIn() {
     user
   );
 
-  const [isPassInputFocused1, setIsPassInputFocused1] = useState(false);
-  const [isPassInputFocused2, setIsPassInputFocused2] = useState(false);
-
   const [showPassword1, setShowPassword1] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
 
@@ -189,20 +186,13 @@ function SignIn() {
             </select>
           </div>
 
-          <div
-            className={
-              "border-b w-full mb-2 flex items-center transition-colors ease-linear duration-300 " +
-              `${isPassInputFocused1 ? "border-[#f5ac19] " : "border-white"}`
-            }
-          >
+          <div className="focus-within:border-[#f5ac19] border-b w-full mb-2 flex items-center transition-colors ease-linear duration-300">
             <input
               name="password"
               type={showPassword1 ? "text" : "password"}
               className="block w-full border-none bg-transparent mt-1 px-2 outline-none"
               placeholder="Senha"
               required
-              onFocus={() => setIsPassInputFocused1(true)}
-              onBlur={() => setIsPassInputFocused1(false)}
               onChange={handleChange}
             />
             {showPassword1 ? (
@@ -215,19 +205,12 @@ function SignIn() {
             )}
           </div>
 
-          <div
-            className={
-              "border-b w-full flex items-center transition-colors ease-linear duration-300 " +
-              `${isPassInputFocused2 ? "border-[#f5ac19] " : "border-white"}`
-            }
-          >
+          <div className="focus-within:border-[#f5ac19] border-b w-full flex items-center transition-colors ease-linear duration-300">
             <input
               type={showPassword2 ? "text" : "password"}
               className="block w-full border-none bg-transparent mt-1 px-2 outline-none"
               placeholder="Repita a Senha"
               required
-              onFocus={() => setIsPassInputFocused2(true)}
-              onBlur={() => setIsPassInputFocused2(false)}
               onChange={(e) => setVerificationPassword(e.target.value)}
             />
             {showPassword2 ? (

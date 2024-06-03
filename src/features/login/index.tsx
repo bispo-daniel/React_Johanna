@@ -24,7 +24,6 @@ function Login() {
   } = useAuthentication(shouldSendReq, userAuth);
 
   const [showPassword, setShowPassword] = useState(false);
-  const [isFocused, setIsFocused] = useState(false);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -72,20 +71,13 @@ function Login() {
             required
             onChange={handleInputChange}
           />
-          <div
-            className={
-              "border-b w-full mb-8 flex items-center transition-colors ease-linear duration-300 " +
-              `${isFocused ? "border-[#f5ac19] " : "border-white"}`
-            }
-          >
+          <div className="focus-within:border-[#f5ac19] border-b w-full mb-8 flex items-center transition-colors ease-linear duration-300 ">
             <input
               name="password"
               type={showPassword ? "text" : "password"}
               className="block w-full border-none bg-transparent mt-1 px-2 outline-none"
               placeholder="Senha"
               required
-              onFocus={() => setIsFocused(true)}
-              onBlur={() => setIsFocused(false)}
               onChange={handleInputChange}
             />
             {showPassword ? (
