@@ -77,7 +77,9 @@ function SignIn() {
   useEffect(() => {
     if (isSuccess)
       setTimeout(() => {
-        navigate("/login");
+        navigate("/login", {
+          state: { email: user.email, password: user.password },
+        });
       }, 1000);
   }, [isSuccess]);
 
