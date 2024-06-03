@@ -230,6 +230,8 @@ const NavButton = ({ title, icon, toggleView, active }: ButtonProps) => {
 };
 
 const DeleteAccount = () => {
+  const { logout } = useAuth();
+
   const [showPassword1, setShowPassword1] = useState(false);
   const [showPassword2, setShowPassword2] = useState(false);
 
@@ -269,6 +271,10 @@ const DeleteAccount = () => {
 
     setShouldCallHook(true);
   };
+
+  useEffect(() => {
+    if (isSuccess) logout();
+  }, [isSuccess]);
 
   return (
     <div className="w-full flex flex-col justify-center text-start">
