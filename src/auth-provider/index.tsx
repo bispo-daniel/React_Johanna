@@ -100,6 +100,9 @@ const refreshTokenReq = async (refreshToken: string) => {
   } catch (error) {
     console.error(`Error trying to refresh token. Reason: ${error}`);
 
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+
     return null;
   }
 };
