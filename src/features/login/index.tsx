@@ -49,7 +49,7 @@ function Login() {
 
   useEffect(() => {
     setShouldSendReq(false);
-  }, [isError]);
+  }, [isError, isSuccess]);
 
   useEffect(() => {
     if (isSuccess && !isLoading && tokens) {
