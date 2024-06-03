@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useMemo, ReactNode } from "react";
+import React, {
+  createContext,
+  useContext,
+  useMemo,
+  ReactNode,
+  useState,
+} from "react";
 import { useTokenStorage } from "@/hooks/useTokenStorage";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { SUPER_USER, COMMOM_USER, API_URL } from "@/config";
@@ -122,14 +128,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     saveTokens,
     saveAccessToken,
   } = useTokenStorage();
-  const user = useMemo(() => {
-    return accessToken ? decodeAccessToken(accessToken) : null;
-  }, [accessToken]);
+  const [user, setUser] = useState<AccessTokenType | null>(
+    accessToken ? decodeAccessToken(accessToken) : null
+  );
 
   const isAdmin = user !== null && user.role === SUPER_USER;
 
   const logout = () => {
+    setUser(null);
     clearTokens();
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
     window.location.href = "https://johannagpt.netlify.app";
   };
 
