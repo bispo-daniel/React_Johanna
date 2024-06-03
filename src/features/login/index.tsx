@@ -5,15 +5,19 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuthentication, AuthType } from "./api/auth";
 import { useAuth } from "@/auth-provider";
 
+type LocationState = {
+  email?: string;
+  password?: string;
+};
+
 function Login() {
   const navigate = useNavigate();
-  const { state } = useLocation();
-  const { email: emailFromLocation, password: passwordFromLocation } =
-    state || { email: "", password: "" };
+  const location = useLocation();
+  const state = location.state as LocationState;
 
   const [userAuth, setUserAuth] = useState<AuthType>({
-    email: "",
-    password: "",
+    email: state?.email || "",
+    password: state?.password || "",
   });
 
   const { saveTokens } = useAuth();
@@ -57,7 +61,7 @@ function Login() {
         navigate("/chat");
       }, 1000);
     }
-  }, [isSuccess, isLoading, tokens]);
+  }, [isSuccess, isLoading, tokens, navigate, saveTokens]);
 
   return (
     <div className="min-h-full flex items-center justify-center select-none">
@@ -68,7 +72,7 @@ function Login() {
         <form onSubmit={(e) => handleSubmit(e)}>
           <input
             name="email"
-            value={emailFromLocation || ""}
+            value={userAuth.email}
             type="email"
             className="block w-full border-b focus:border-[#f5ac19] transition-colors ease-linear duration-300 border-white bg-transparent mt-1 px-2 outline-none mb-2"
             placeholder="Email"
@@ -78,7 +82,7 @@ function Login() {
           <div className="focus-within:border-[#f5ac19] border-b w-full mb-8 flex items-center transition-colors ease-linear duration-300 ">
             <input
               name="password"
-              value={passwordFromLocation || ""}
+              value={userAuth.password}
               type={showPassword ? "text" : "password"}
               className="block w-full border-none bg-transparent mt-1 px-2 outline-none"
               placeholder="Senha"
