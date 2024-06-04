@@ -35,7 +35,6 @@ export const useAuthentication = (enabled: boolean, auth: AuthType) =>
     queryKey: [REACT_QUERY_KEYS.auth],
     queryFn: () => authenticate(auth),
     enabled,
-    retry: false,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
