@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCreateUserQuery, CreateUserType } from "./api/postUser";
 
 function SignIn() {
-  const [shouldCallHook, setShouldCallHook] = useState(false);
+  const [shouldSendReq, setShouldSendReq] = useState(false);
   const [user, setUser] = useState<CreateUserType>({
     email: "",
     password: "",
@@ -14,7 +14,7 @@ function SignIn() {
   });
 
   const { isLoading, isSuccess, isError } = useCreateUserQuery(
-    shouldCallHook,
+    shouldSendReq,
     user
   );
 
@@ -35,7 +35,7 @@ function SignIn() {
 
     handleDateChange();
 
-    setShouldCallHook(true);
+    setShouldSendReq(true);
   };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -68,7 +68,7 @@ function SignIn() {
 
   useEffect(() => {
     if (!isLoading) {
-      setShouldCallHook(false);
+      setShouldSendReq(false);
     }
   }, [isLoading]);
 
@@ -256,13 +256,13 @@ function SignIn() {
           </p>
         </div>
 
-        {isLoading && (
+        {shouldSendReq && isLoading && (
           <div className="mt-4">
             <div className="progress-bar"></div>
           </div>
         )}
 
-        {(isSuccess || isError) && (
+        {shouldSendReq && (isSuccess || isError) && (
           <div className="mt-4">
             <div
               className={

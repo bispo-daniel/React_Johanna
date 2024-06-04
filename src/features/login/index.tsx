@@ -115,12 +115,12 @@ function Login() {
             </Link>
           </p>
         </div>
-        {isLoading && (
+        {shouldSendReq && isLoading && (
           <div className="mt-4">
             <div className="progress-bar"></div>
           </div>
         )}
-        {(isSuccess || isError) && (
+        {shouldSendReq && (isSuccess || isError) && (
           <div className="mt-4">
             <div
               className={
