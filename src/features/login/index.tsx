@@ -35,6 +35,8 @@ function Login() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    console.log(`shouldSendReq: ${shouldSendReq}`);
+
     setShouldSendReq(true);
   };
 
