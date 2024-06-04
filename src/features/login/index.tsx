@@ -48,11 +48,7 @@ function Login() {
   };
 
   useEffect(() => {
-    setShouldSendReq(false);
-  }, [isError, isSuccess]);
-
-  useEffect(() => {
-    if (isSuccess && !isLoading && tokens) {
+    if (isSuccess && !isLoading && tokens && shouldSendReq) {
       const { accessToken, refreshToken } = tokens;
 
       saveTokens(accessToken, refreshToken);
@@ -62,6 +58,10 @@ function Login() {
       }, 1000);
     }
   }, [isSuccess, isLoading, tokens, navigate, saveTokens]);
+
+  useEffect(() => {
+    setShouldSendReq(false);
+  }, [isError, isSuccess]);
 
   return (
     <div className="min-h-full flex items-center justify-center select-none">
