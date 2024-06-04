@@ -38,6 +38,4 @@ export const useAuthentication = (enabled: boolean, auth: AuthType) =>
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
-    cacheTime: Infinity,
-    staleTime: Infinity
   });

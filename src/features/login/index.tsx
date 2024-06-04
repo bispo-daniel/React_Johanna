@@ -38,6 +38,8 @@ function Login() {
     console.log(`shouldSendReq: ${shouldSendReq}`);
 
     setShouldSendReq(true);
+
+    console.log(`shouldSendReq after set: ${shouldSendReq}`);
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
