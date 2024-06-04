@@ -157,7 +157,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     clearTokens();
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
-    navigate(0);
+    navigate("/");
   };
 
   const isAccessTokenExpired = user?.exp ? Date.now() > user.exp * 1000 : true;
