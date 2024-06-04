@@ -8,6 +8,7 @@ import React, {
 import { useTokenStorage } from "@/hooks/useTokenStorage";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 import { SUPER_USER, COMMOM_USER, API_URL } from "@/config";
+import { useNavigate } from "react-router-dom";
 
 export class CustomServerError extends Error {
   public statusCode: number;
@@ -131,21 +132,31 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     saveTokens,
     saveAccessToken,
   } = useTokenStorage();
-  // const [user, setUser] = useState<AccessTokenType | null>(
-  //   accessToken ? decodeAccessToken(accessToken) : null
-  // );
-  const user = useMemo(() => {
-    return accessToken ? decodeAccessToken(accessToken) : null;
+
+  const navigate = useNavigate();
+
+  const [isLogged, setIsLogged] = useState(false);
+
+  useEffect(() => {
+    if (accessToken) {
+      setIsLogged(true);
+    } else {
+      setIsLogged(false);
+    }
   }, [accessToken]);
+
+  const user = useMemo(() => {
+    return isLogged && accessToken ? decodeAccessToken(accessToken) : null;
+  }, [accessToken, isLogged]);
 
   const isAdmin = user !== null && user.role === SUPER_USER;
 
   const logout = () => {
-    // setUser(null);
+    setIsLogged(false);
     clearTokens();
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
-    window.location.href = "https://johannagpt.netlify.app";
+    navigate(0);
   };
 
   const isAccessTokenExpired = user?.exp ? Date.now() > user.exp * 1000 : true;
@@ -183,7 +194,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       isAccessTokenExpired,
       refreshAccessToken,
     }),
-    [user]
+    [user, isLogged]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
