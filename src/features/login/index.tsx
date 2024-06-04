@@ -53,15 +53,13 @@ function Login() {
 
       saveTokens(accessToken, refreshToken);
 
+      setShouldSendReq(false);
+
       setTimeout(() => {
         navigate("/chat");
       }, 1000);
     }
   }, [isSuccess, isLoading, tokens, navigate, saveTokens]);
-
-  useEffect(() => {
-    setShouldSendReq(false);
-  }, [isError, isSuccess]);
 
   return (
     <div className="min-h-full flex items-center justify-center select-none">
