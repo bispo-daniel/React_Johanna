@@ -44,7 +44,7 @@ const Navigator = () => {
         ...defaultItems,
         ...protectedItems,
         ...superUserProtectedItems,
-        { icon: <Power size="18" />, action: logout },
+        { icon: <Power size="18" />, action: () => logout() },
       ];
     } else {
       return [...defaultItems, { icon: <LogIn size="18" />, path: "/login" }];
