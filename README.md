@@ -1,30 +1,54 @@
-# React + TypeScript + Vite
+# Johanna AI – Project Overview
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Johanna AI is an assistant designed to support current and aspiring **Psychology** students.  
+The full solution is composed of **three independent applications** that communicate with one another:
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 1. Web Client
 
-## Expanding the ESLint configuration
+* **Repository**: <https://github.com/bispo-daniel/React_Johanna>  
+* **Stack**: Vite + React 18, TypeScript, and Tailwind CSS  
+* **Role**: delivers the web interface where users—either "super user" or "commom user" — sign in, chat with Johanna AI, view answers in real time, and (for "super user") approve pending registrations submitted by common users. 
+* **Integrations**  
+  * REST API (Java) for authentication and persistent data  
+  * WebSocket for streaming model responses  
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+> For complete details on scripts, dependencies, and local setup, see the `package.json` in this repository.
 
-- Configure the top-level `parserOptions` property like this:
+---
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+## 2. WebSocket Server
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+* **Repository**: <https://github.com/bispo-daniel/johanna_openai>  
+* **Stack**: Node.js, Express, Socket.io, and TypeScript  
+* **Role**: receives messages from the front-end, forwards them to the fine-tuned OpenAI model, and streams the responses back to the client  
+* **Technical highlights**  
+  * Payload validation with **Zod**  
+  * JWT support to identify authenticated users  
+  * Sensitive variables loaded via **dotenv**
+
+---
+
+## 3. REST API
+
+* **Repository**: <https://github.com/DevRodrigoSantana/Smart-teaching-assistant-Johana>  
+* **Stack**: Spring Boot 3 (Java 17), Hibernate JPA, Spring Security, and MySQL  
+* **Role**: business core — manages users, JWT authentication, data persistence, and domain rules  
+* **Key dependencies**  
+  * `spring-boot-starter-web` and `spring-boot-starter-data-jpa` for the web layer and ORM  
+  * `spring-boot-starter-security` with **jjwt** for authentication  
+  * **ModelMapper** for DTO ↔ entity mapping  
+
+---
+
+## How the layers fit together
+
+1. The **Web Client** sends login requests and other REST operations to the **API**.  
+2. Once authenticated, the browser opens a **WebSocket** channel to chat with Johanna AI.  
+3. The **WebSocket Server** connects to OpenAI, receives streamed responses, and pushes them back to the front-end.  
+4. User data, sessions, and history are stored by the **API** in a MySQL database.
+
+---
+
+For questions or contributions, visit each repository above and consult the relevant configuration files (`package.json`, `pom.xml`).
